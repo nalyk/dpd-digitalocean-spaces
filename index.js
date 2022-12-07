@@ -113,8 +113,11 @@ S3Bucket.prototype.post = function (ctx, next) {
         resultFiles = [],
         remainingFile = 0;
     
+    form.uploadDir = uploadDir;
+
     form.parse(req, function (err, fields, files) {
         console.log('Form parse...')
+        
         var debugInfo = {
             fields: fields,
             files: files
@@ -131,6 +134,8 @@ S3Bucket.prototype.post = function (ctx, next) {
           });
         */
     });
+
+    return req.resume();
 
     // Will send the response if all files have been processed
     /*
