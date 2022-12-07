@@ -106,12 +106,20 @@ S3Bucket.prototype.post = function (ctx, next) {
         ACL: "public"
     };
     
+    this.s3.upload(params, function(err, data) {
+        if (err) {
+            return ctx.done("Upload S3 error!");
+        }
+        console.log('Success!');
+        return ctx.done(null, data);
+    });
+    /*
     this.s3.putObjet(params, (err, data) => {
         if (err) return console.log(err);
         console.log("Your file has been uploaded successfully!", data);
         ctx.done(null, data);
     });
-    
+    */
 }
 
 // get a signedUrl for get object into s3
