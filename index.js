@@ -117,6 +117,12 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.parse(req, function (err, fields, files) {
         console.log('Form parse...')
+
+        console.log('fields')
+        console.log(fields)
+
+        console.log('files')
+        console.log(files)
         
         var debugInfo = {
             fields: fields,
