@@ -183,7 +183,31 @@ S3Bucket.prototype.post = function (ctx, next) {
             files: files['files[]']
         }
 
-        return ctx.done(null, debugInfo);
+        var params = {
+            Bucket: this.config.bucket,
+            Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(files['files[]'].originalFilename) + path.extname(files['files[]'].originalFilename),
+            Body: fs.createReadStream(files['files[]'].filepath),
+            ACL: "public-read"
+        };
+    
+        var options = {
+            partSize: 10 * 1024 * 1024, // 10 MB
+            queueSize: 10
+        };
+    
+        this.s3.upload(params, options, function (err, data) {
+            if (!err) {
+                console.log('uplod module success');
+                console.log(data); // successful response
+                return ctx.done(null, data);
+            } else {
+                console.log('uplod module error');
+                console.log(err); // an error occurred
+                return ctx.done("Upload S3 error!");
+            }
+        });
+
+        // return ctx.done(null, debugInfo);
         /*
           var oldpath = files.filetoupload.filepath;
           var newpath = 'C:/Users/Your Name/' + files.filetoupload.originalFilename;
