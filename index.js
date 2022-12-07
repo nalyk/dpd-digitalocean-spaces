@@ -4,26 +4,18 @@ var Resource = require('deployd/lib/resource')
 , AWS = require('aws-sdk')
 , fs = require('fs');
 
+const { S3Client, PutObjectCommand, ListObjectsCommand, DeleteObjectCommand, DeleteObjectsCommand } = require("@aws-sdk/client-s3");
+
+
 function S3Bucket(name, options) {
     Resource.apply(this, arguments);
-    /*
-    {
-            forcePathStyle: false, // Configures to use subdomain/virtual calling format.
-            endpoint:  this.config.endpoint,
-            region: "us-east-1",
-            credentials: {
-                accessKeyId: this.config.key,
-                secretAccessKey: this.config.secret,
-            }
-        }
-    */
     if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
-        this.spacesEndpoint = new AWS.Endpoint(this.config.endpoint);
 
         this.s3 = new AWS.S3({
             forcePathStyle: false, // Configures to use subdomain/virtual calling format.
             endpoint:  this.config.endpoint,
             region: "us-east-1",
+            signatureVersion: 'v4',
             credentials: {
                 accessKeyId: this.config.key,
                 secretAccessKey: this.config.secret,
@@ -108,7 +100,31 @@ S3Bucket.prototype.handle = function (ctx, next) {
 S3Bucket.prototype.post = function (ctx, next) {
     var s3Key = ctx.url[0] == '/' ? ctx.url.substr(1) : ctx.url;
 
+    var filePath = '/opt/pulsapi/public/logo33_blue.png';
+    var params = {
+        Bucket: this.config.bucket,
+        Key: path.basename(filePath),
+        Body: fs.createReadStream(filePath),
+        ACL: "public-read"
+    };
 
+    var options = {
+        partSize: 10 * 1024 * 1024, // 10 MB
+        queueSize: 10
+    };
+
+    this.s3.upload(params, options, function (err, data) {
+        if (!err) {
+            console.log('uplod module success');
+            console.log(data); // successful response
+            return ctx.done(null, data);
+        } else {
+            console.log('uplod module error');
+            console.log(err); // an error occurred
+            return ctx.done("Upload S3 error!");
+        }
+    });
+    /*
     const file = fs.readFileSync("/opt/pulsapi/public/logo33_blue.png");
 
     var params = {
@@ -128,6 +144,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         console.log(data);
         return ctx.done(null, data);
     });
+    */
     /*
     this.s3.putObjet(params, (err, data) => {
         if (err) return console.log(err);
