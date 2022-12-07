@@ -144,7 +144,7 @@ S3Bucket.prototype.handle = function (ctx, next) {
             return processDone(err);
         });
 			
-		return req.resume();
+		// return req.resume();
         
         if (this.events['post']) {
             this.events['post'].run(ctx, domain, function(err) {
