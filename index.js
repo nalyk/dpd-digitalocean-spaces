@@ -4,9 +4,6 @@ var Resource = require('deployd/lib/resource')
 , AWS = require('aws-sdk')
 , fs = require('fs');
 
-const { S3Client, PutObjectCommand, ListObjectsCommand, DeleteObjectCommand, DeleteObjectsCommand } = require("@aws-sdk/client-s3");
-
-
 function S3Bucket(name, options) {
     Resource.apply(this, arguments);
     if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
