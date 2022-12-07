@@ -20,7 +20,15 @@ function S3Bucket(name, options) {
     if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
         this.spacesEndpoint = new AWS.Endpoint(this.config.endpoint);
 
-        this.s3 = new AWS.S3({endpoint: this.config.endpoint, accessKeyId: this.config.key, secretAccessKey: this.config.secret});
+        this.s3 = new AWS.S3({
+            forcePathStyle: false, // Configures to use subdomain/virtual calling format.
+            endpoint:  this.config.endpoint,
+            region: "us-east-1",
+            credentials: {
+                accessKeyId: this.config.key,
+                secretAccessKey: this.config.secret,
+            }
+        });
     }
 }
 util.inherits(S3Bucket, Resource);
