@@ -103,7 +103,8 @@ S3Bucket.prototype.post = function (ctx, next) {
     var params = {
         Bucket: this.config.bucket,
         Key: path.basename(filePath),
-        Body: fs.createReadStream(filePath)
+        Body: fs.createReadStream(filePath),
+        ACL: "public-read"
     };
 
     var options = {
@@ -122,34 +123,6 @@ S3Bucket.prototype.post = function (ctx, next) {
             return ctx.done("Upload S3 error!");
         }
     });
-    /*
-    const file = fs.readFileSync("/opt/pulsapi/public/logo33_blue.png");
-
-    var params = {
-        Bucket: this.config.bucket,
-        Key: "demo/test/logo33_blue.png",
-        Body: file,
-        ACL: "public-read"
-    };
-
-    this.s3.upload(params, function(err, data) {
-        if (err) {
-            console.log('Upload error')
-            console.log(err)
-            return ctx.done("Upload S3 error!");
-        }
-        console.log('Upload Success!');
-        console.log(data);
-        return ctx.done(null, data);
-    });
-    */
-    /*
-    this.s3.putObjet(params, (err, data) => {
-        if (err) return console.log(err);
-        console.log("Your file has been uploaded successfully!", data);
-        ctx.done(null, data);
-    });
-    */
 }
 
 // get a signedUrl for get object into s3
