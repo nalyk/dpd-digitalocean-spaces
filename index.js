@@ -87,65 +87,6 @@ S3Bucket.prototype.handle = function (ctx, next) {
         }
     } else if (req.method === "POST") {
         
-        ctx.body = {};
-
-        var form = new formidable.IncomingForm(),
-			uploadDir = "/tmp",
-			resultFiles = [],
-			remainingFile = 0;
-
-        // Will send the response if all files have been processed
-        
-		var processDone = function(err, fileInfo) {
-			if (err) return ctx.done(err);
-			resultFiles.push(fileInfo);
-			
-			remainingFile--;
-			if (remainingFile === 0) {
-				debug("Response sent: ", resultFiles);
-				return ctx.done(null, resultFiles); // TODO not clear what to do here yet
-			}
-		};
-        
-
-        form.uploadDir = uploadDir;
-        /*
-		var renameAndStore = function(file) {
-			fs.rename(file.path, path.join(uploadDir, file.name), function(err) {
-				if (err) return processDone(err);
-				debug("File renamed after event.upload.run: %j", err || path.join(uploadDir, file.name));
-				
-				ctx.body.filename = file.name;
-				ctx.body.originalFilename = file.originalFilename;
-				
-				ctx.body.filesize = file.size;
-				ctx.body.creationDate = new Date().getTime();
-
-				// Store MIME type in object
-				ctx.body.type = mime.lookup(file.name);
-				
-				self.save(ctx, processDone);
-			});
-		};
-        */
-
-        form.parse(req)
-        .on('file', function(name, file) {
-            debug("File %j received", file.name);
-            file.originalFilename = file.name;
-            file.name = md5(Date.now()) + '.' + file.name.split('.').pop();
-            console.log(file)
-            //renameAndStore(file);
-        }).on('fileBegin', function(name, file) {
-            remainingFile++;
-            debug("Receiving a file: %j", file.name);
-        }).on('error', function(err) {
-            debug("Error: %j", err);
-            return processDone(err);
-        });
-			
-		// return req.resume();
-        
         if (this.events['post']) {
             this.events['post'].run(ctx, domain, function(err) {
                 if (err) return ctx.done(err);
@@ -161,8 +102,48 @@ S3Bucket.prototype.handle = function (ctx, next) {
 
 // Upload a file to S3
 S3Bucket.prototype.post = function (ctx, next) {
-    var s3Key = ctx.url[0] == '/' ? ctx.url.substr(1) : ctx.url;
+    
+    var req = ctx.req,
+		self = this;
+    
+    ctx.body = {};
+    
+    var form = new formidable.IncomingForm(),
+        uploadDir = '/tmp',
+        resultFiles = [],
+        remainingFile = 0;
 
+    // Will send the response if all files have been processed
+    var processDone = function(err, fileInfo) {
+        if (err) return ctx.done(err);
+        resultFiles.push(fileInfo);
+        
+        remainingFile--;
+        if (remainingFile === 0) {
+            debug("Response sent: ", resultFiles);
+            return ctx.done(null, resultFiles); // TODO not clear what to do here yet
+        }
+    };
+
+    form.uploadDir = uploadDir;
+
+    form.parse(req)
+        .on('file', function(name, file) {
+            debug("File %j received", file.name);
+            file.originalFilename = file.name;
+            file.name = md5(Date.now()) + '.' + file.name.split('.').pop();
+            console.log(file);
+            //renameAndStore(file);
+        }).on('fileBegin', function(name, file) {
+            remainingFile++;
+            debug("Receiving a file: %j", file.name);
+        }).on('error', function(err) {
+            debug("Error: %j", err);
+            return processDone(err);
+        });
+        
+    return req.resume();
+    /*
     var filePath = '/opt/pulsapi/public/logo33_blue.png';
     var params = {
         Bucket: this.config.bucket,
@@ -187,6 +168,7 @@ S3Bucket.prototype.post = function (ctx, next) {
             return ctx.done("Upload S3 error!");
         }
     });
+    */
 }
 
 // get a signedUrl for get object into s3
