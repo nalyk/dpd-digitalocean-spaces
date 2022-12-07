@@ -14,6 +14,7 @@ function S3Bucket(name, options) {
             endpoint:  this.config.endpoint,
             region: "us-east-1",
             signatureVersion: 'v4',
+            signatureCache: false,
             credentials: {
                 accessKeyId: this.config.key,
                 secretAccessKey: this.config.secret,
