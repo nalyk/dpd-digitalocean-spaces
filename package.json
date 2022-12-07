@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/nalyk/dpd-digitalocean-spaces#readme",
   "dependencies": {
+    "aws-sdk": "^2.1269.0",
     "formidable": "^2.1.1",
     "md5": "^2.3.0",
     "mime": "^3.0.0",
