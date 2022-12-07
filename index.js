@@ -114,6 +114,18 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
+    // Will send the response if all files have been processed
+    var processDone = function(err, fileInfo) {
+        if (err) return ctx.done(err);
+        resultFiles.push(fileInfo);
+        
+        remainingFile--;
+        if (remainingFile === 0) {
+            debug("Response sent: ", resultFiles);
+            return ctx.done(null, resultFiles); // TODO not clear what to do here yet
+        }
+    };
+
     form.parse(req)
     .on('progress', function(bytesReceived, bytesExpected) {
         // handle progress
@@ -124,7 +136,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         console.log(name);
         console.log(file);
     }).on('error', function(err) {
-        return ctx.done(err);
+        return processDone(err);
     }).on('end', function() {
         //end process
         ctx.done({ statusCode: 200, message: "Succes not yet supported" });
