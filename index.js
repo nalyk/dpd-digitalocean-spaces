@@ -129,9 +129,9 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.parse(req)
         .on('file', function(name, file) {
-            debug("File %j received", file.name);
-            file.originalFilename = file.name;
-            file.name = md5(Date.now()) + '.' + file.name.split('.').pop();
+            //debug("File %j received", file.name);
+            //file.originalFilename = file.name;
+            //file.name = md5(Date.now()) + '.' + file.name.split('.').pop();
             console.log(file);
             //renameAndStore(file);
         }).on('fileBegin', function(name, file) {
