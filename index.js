@@ -20,7 +20,7 @@ function S3Bucket(name, options) {
     if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
         this.spacesEndpoint = new AWS.Endpoint(this.config.endpoint);
 
-        this.s3 = new AWS.S3({endpoint: this.spacesEndpoint, accessKeyId: this.config.key, secretAccessKey: this.config.secret});
+        this.s3 = new AWS.S3({endpoint: this.config.endpoint, accessKeyId: this.config.key, secretAccessKey: this.config.secret});
     }
 }
 util.inherits(S3Bucket, Resource);
