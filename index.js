@@ -2,7 +2,8 @@ var Resource = require('deployd/lib/resource')
 , httpUtil = require('deployd/lib/util/http')
 , util = require('util')
 , AWS = require('aws-sdk')
-, fs = require('fs');
+, fs = require('fs')
+, path = require('path');
 
 function S3Bucket(name, options) {
     Resource.apply(this, arguments);
