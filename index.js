@@ -120,7 +120,9 @@ S3Bucket.prototype.post = function (ctx, next) {
     }).on('field', function(fieldName, fieldValue) {
         console.log('data', { name: 'field', key: fieldName, value: fieldValue });
     }).on('file', function(name, file) {
-        console.log('data', { name: 'file', name, value: file });
+        console.log('on file');
+        console.log(name);
+        console.log(file);
     }).on('error', function(err) {
         return ctx.done(err);
     }).on('end', function() {
