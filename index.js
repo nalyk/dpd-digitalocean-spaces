@@ -7,7 +7,7 @@ var Resource = require('deployd/lib/resource')
 function S3Bucket(name, options) {
     Resource.apply(this, arguments);
 
-    this.spacesEndpoint = new AWS.Endpoint(this.config.endpoint);
+    const spacesEndpoint = new AWS.Endpoint(this.config.endpoint);
     /*
     {
             forcePathStyle: false, // Configures to use subdomain/virtual calling format.
@@ -20,7 +20,7 @@ function S3Bucket(name, options) {
         }
     */
     if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
-        this.s3 = new AWS.S3({endpoint: this.spacesEndpoint, accessKeyId: this.config.key, secretAccessKey: this.config.secret});
+        this.s3 = new AWS.S3({endpoint: spacesEndpoint, accessKeyId: this.config.key, secretAccessKey: this.config.secret});
     }
 }
 util.inherits(S3Bucket, Resource);
