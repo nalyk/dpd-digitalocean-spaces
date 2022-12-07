@@ -146,6 +146,9 @@ S3Bucket.prototype.post = function (ctx, next) {
                 return ctx.done("Upload S3 error!");
             }
         });
+    
+        return req.resume();
+
 
         // return ctx.done(null, debugInfo);
         /*
@@ -158,7 +161,6 @@ S3Bucket.prototype.post = function (ctx, next) {
           });
         */
     });
-    
 }
 
 // get a signedUrl for get object into s3
