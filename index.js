@@ -114,6 +114,60 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
+    /*
+    var processDone = function(err, fileInfo) {
+        if (err) return ctx.done(err);
+        resultFiles.push(fileInfo);
+        
+        remainingFile--;
+        if (remainingFile === 0) {
+            debug("Response sent: ", resultFiles);
+            return ctx.done(null, resultFiles); // TODO not clear what to do here yet
+        }
+    };
+    */
+
+    /*
+    var renameAndStore = function(file) {
+        fs.rename(file.path, path.join(uploadDir, file.name), function(err) {
+            if (err) return processDone(err);
+            debug("File renamed after event.upload.run: %j", err || path.join(uploadDir, file.name));
+            
+            ctx.body.filename = file.name;
+            ctx.body.originalFilename = file.originalFilename;
+            
+            ctx.body.filesize = file.size;
+            ctx.body.creationDate = new Date().getTime();
+
+            // Store MIME type in object
+            ctx.body.type = mime.lookup(file.name);
+            
+            self.save(ctx, processDone);
+        });
+    };
+    */
+
+    /*
+    form.parse(req)
+        .on('field', function(fieldName, fieldValue) {
+            console.log('data', { name: 'field', key: fieldName, value: fieldValue });
+        }).on('file', function(name, file) {
+            debug("File %j received", file.name);
+            //file.originalFilename = file.name;
+            //file.name = md5(Date.now()) + '.' + file.name.split('.').pop();
+            //renameAndStore(file);
+            console.log('data', { name: 'file', name, value: file });
+        }).on('fileBegin', function(name, file) {
+            remainingFile++;
+            debug("Receiving a file: %j", file.name);
+        }).on('error', function(err) {
+            debug("Error: %j", err);
+            return processDone(err);
+        });
+        
+    return req.resume();
+    */
+    
     form.parse(req, function (err, fields, files) {
         console.log('Form parse...')
 
@@ -122,6 +176,32 @@ S3Bucket.prototype.post = function (ctx, next) {
 
         console.log('files')
         console.log(files['files[]'])
+        
+        var debugInfo = {
+            fields: fields,
+            files: files['files[]']
+        }
+
+        /*
+        filepath
+        : 
+        "/tmp/a4404854bb498aff0e6717300"
+        mimetype
+        : 
+        "image/jpeg"
+        mtime
+        : 
+        "2022-12-07T11:02:52.096Z"
+        newFilename
+        : 
+        "a4404854bb498aff0e6717300"
+        originalFilename
+        : 
+        "imagine_reprezentativa.jpg"
+        size
+        : 
+        91361
+        */
 
         var params = {
             Bucket: this.config.bucket,
@@ -146,9 +226,6 @@ S3Bucket.prototype.post = function (ctx, next) {
                 return ctx.done("Upload S3 error!");
             }
         });
-    
-        return req.resume();
-
 
         // return ctx.done(null, debugInfo);
         /*
@@ -161,6 +238,36 @@ S3Bucket.prototype.post = function (ctx, next) {
           });
         */
     });
+
+    return req.resume();
+    
+
+    /*
+    var filePath = '/opt/pulsapi/public/logo33_blue.png';
+    var params = {
+        Bucket: this.config.bucket,
+        Key: path.basename(filePath),
+        Body: fs.createReadStream(filePath),
+        ACL: "public-read"
+    };
+
+    var options = {
+        partSize: 10 * 1024 * 1024, // 10 MB
+        queueSize: 10
+    };
+
+    this.s3.upload(params, options, function (err, data) {
+        if (!err) {
+            console.log('uplod module success');
+            console.log(data); // successful response
+            return ctx.done(null, data);
+        } else {
+            console.log('uplod module error');
+            console.log(err); // an error occurred
+            return ctx.done("Upload S3 error!");
+        }
+    });
+    */
 }
 
 // get a signedUrl for get object into s3
