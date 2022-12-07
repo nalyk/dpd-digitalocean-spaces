@@ -114,35 +114,50 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
-    // Will send the response if all files have been processed
-    var processDone = function(err, fileInfo) {
-        if (err) return ctx.done(err);
-        resultFiles.push(fileInfo);
-        
-        remainingFile--;
-        if (remainingFile === 0) {
-            debug("Response sent: ", resultFiles);
-            return ctx.done(null, resultFiles); // TODO not clear what to do here yet
-        }
-    };
+    form.parse(req, function (err, fields, files) {
+        console.log('Form parse...')
 
-    form.parse(req)
-    .on('progress', function(bytesReceived, bytesExpected) {
-        // handle progress
-    }).on('field', function(fieldName, fieldValue) {
-        console.log('data', { name: 'field', key: fieldName, value: fieldValue });
-    }).on('file', function(name, file) {
-        console.log('on file');
-        console.log(name);
-        console.log(file);
-    }).on('error', function(err) {
-        return processDone(err);
-    }).on('end', function() {
-        //end process
-        ctx.done({ statusCode: 200, message: "Succes not yet supported" });
+        console.log('fields')
+        console.log(fields)
+
+        console.log('files')
+        console.log(files['files[]'])
+
+        var params = {
+            Bucket: this.config.bucket,
+            Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(files['files[]'].originalFilename) + path.extname(files['files[]'].originalFilename),
+            Body: fs.createReadStream(files['files[]'].filepath),
+            ACL: "public-read"
+        };
+    
+        var options = {
+            partSize: 10 * 1024 * 1024, // 10 MB
+            queueSize: 10
+        };
+    
+        this.s3.upload(params, options, function (err, data) {
+            if (!err) {
+                console.log('uplod module success');
+                console.log(data); // successful response
+                return ctx.done(null, data);
+            } else {
+                console.log('uplod module error');
+                console.log(err); // an error occurred
+                return ctx.done("Upload S3 error!");
+            }
+        });
+
+        // return ctx.done(null, debugInfo);
+        /*
+          var oldpath = files.filetoupload.filepath;
+          var newpath = 'C:/Users/Your Name/' + files.filetoupload.originalFilename;
+          fs.rename(oldpath, newpath, function (err) {
+            if (err) ctx.done(err,null);
+            res.write('File uploaded and moved!');
+            res.end();
+          });
+        */
     });
-
-    return req.resume();
     
 }
 
