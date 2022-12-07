@@ -4,10 +4,15 @@ var Resource = require('deployd/lib/resource')
 , AWS = require('aws-sdk')
 , fs = require('fs');
 
+
+const s3 = new AWS.S3({endpoint: spacesEndpoint, accessKeyId: process.env.DO_SPACES_KEY, secretAccessKey: process.env.DO_SPACES_SECRET});
+
 function S3Bucket(name, options) {
     Resource.apply(this, arguments);
-    if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
-        this.s3 = new AWS.S3({
+
+    const spacesEndpoint = new AWS.Endpoint(this.config.endpoint);
+    /*
+    {
             forcePathStyle: false, // Configures to use subdomain/virtual calling format.
             endpoint:  this.config.endpoint,
             region: "us-east-1",
@@ -15,7 +20,10 @@ function S3Bucket(name, options) {
                 accessKeyId: this.config.key,
                 secretAccessKey: this.config.secret,
             }
-        });
+        }
+    */
+    if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
+        this.s3 = new AWS.S3({endpoint: spacesEndpoint, accessKeyId: this.config.key, secretAccessKey: this.config.secret});
     }
 }
 util.inherits(S3Bucket, Resource);
@@ -98,19 +106,21 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     const file = fs.readFileSync("/opt/pulsapi/public/logo33_blue.png");
 
-
     var params = {
         Bucket: this.config.bucket,
-        Key: s3Key,
+        Key: "demo/test/logo33_blue.png",
         Body: file,
-        ACL: "public"
+        ACL: "public-read"
     };
-    
+
     this.s3.upload(params, function(err, data) {
         if (err) {
+            console.log('Upload error')
+            console.log(err)
             return ctx.done("Upload S3 error!");
         }
-        console.log('Success!');
+        console.log('Upload Success!');
+        console.log(data);
         return ctx.done(null, data);
     });
     /*
