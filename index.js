@@ -10,9 +10,9 @@ function S3Bucket(name, options) {
     if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
 
         this.s3 = new AWS.S3({
-            forcePathStyle: false, // Configures to use subdomain/virtual calling format.
-            endpoint:  this.config.endpoint,
-            region: "us-east-1",
+            forcePathStyle: true, // Configures to use subdomain/virtual calling format.
+            endpoint: this.config.endpoint,
+            region: 'us-east-1',
             signatureVersion: 'v4',
             signatureCache: false,
             credentials: {
