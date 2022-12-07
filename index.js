@@ -115,6 +115,7 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
+    /*
     var processDone = function(err, fileInfo) {
         if (err) return ctx.done(err);
         resultFiles.push(fileInfo);
@@ -125,6 +126,8 @@ S3Bucket.prototype.post = function (ctx, next) {
             return ctx.done(null, resultFiles); // TODO not clear what to do here yet
         }
     };
+    */
+
     /*
     var renameAndStore = function(file) {
         fs.rename(file.path, path.join(uploadDir, file.name), function(err) {
@@ -144,6 +147,8 @@ S3Bucket.prototype.post = function (ctx, next) {
         });
     };
     */
+
+    /*
     form.parse(req)
         .on('field', function(fieldName, fieldValue) {
             console.log('data', { name: 'field', key: fieldName, value: fieldValue });
@@ -162,7 +167,8 @@ S3Bucket.prototype.post = function (ctx, next) {
         });
         
     return req.resume();
-    /*
+    */
+    
     form.parse(req, function (err, fields, files) {
         console.log('Form parse...')
 
@@ -178,7 +184,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         }
 
         return ctx.done(null, debugInfo);
-        
+        /*
           var oldpath = files.filetoupload.filepath;
           var newpath = 'C:/Users/Your Name/' + files.filetoupload.originalFilename;
           fs.rename(oldpath, newpath, function (err) {
@@ -186,11 +192,11 @@ S3Bucket.prototype.post = function (ctx, next) {
             res.write('File uploaded and moved!');
             res.end();
           });
-        
+        */
     });
 
     return req.resume();
-    */
+    
 
     /*
     var filePath = '/opt/pulsapi/public/logo33_blue.png';
