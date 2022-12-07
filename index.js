@@ -5,17 +5,21 @@ var Resource = require('deployd/lib/resource')
 
 function S3Bucket(name, options) {
     Resource.apply(this, arguments);
-    if (this.config.key && this.config.secret && this.config.bucket) {
+    if (this.config.key && this.config.secret && this.config.endpoint) {
         this.s3 = new AWS.S3({
-            accessKeyId:this.config.key,
-            secretAccessKey: this.config.secret,
-            region: this.config.region,
+            forcePathStyle: false, // Configures to use subdomain/virtual calling format.
+            endpoint:  this.config.endpoint,
+            region: "us-east-1",
+            credentials: {
+                accessKeyId: this.config.key,
+                secretAccessKey: this.config.secret,
+            }
         });
     }
 }
 util.inherits(S3Bucket, Resource);
 module.exports = S3Bucket;
-S3Bucket.label = "S3 Bucket";
+S3Bucket.label = "S3 Space";
 
 S3Bucket.prototype.clientGeneration = true;
 
@@ -28,10 +32,7 @@ S3Bucket.basicDashboard = {
         name: 'secret'
         , type: 'string'
     }, {
-        name: 'region'
-        , type: 'string'
-    }, {
-        name: 'bucket'
+        name: 'endpoint'
         , type: 'string'
     }]
 };
