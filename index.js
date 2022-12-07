@@ -85,7 +85,12 @@ function Fileupload(name, options) {
 	try {
 		fs.statSync(this.config.fullDirectory).isDirectory();
 	} catch (er) {
-		fs.mkdir(this.config.fullDirectory);
+        fs.mkdir(this.config.fullDirectory, (err) => {
+            if (err) {
+                return console.error(err);
+            }
+            console.log('Directory created successfully!');
+        });
 	}
 }
 
