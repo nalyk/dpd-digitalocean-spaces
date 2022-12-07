@@ -204,7 +204,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         */
 
         var params = {
-            Bucket: this.config.bucket,
+            Bucket: "pulsmedia",
             Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(files['files[]'].originalFilename) + path.extname(files['files[]'].originalFilename),
             Body: fs.createReadStream(files['files[]'].filepath),
             ACL: "public-read"
