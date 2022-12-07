@@ -4,9 +4,6 @@ var Resource = require('deployd/lib/resource')
 , AWS = require('aws-sdk')
 , fs = require('fs');
 
-
-const s3 = new AWS.S3({endpoint: spacesEndpoint, accessKeyId: process.env.DO_SPACES_KEY, secretAccessKey: process.env.DO_SPACES_SECRET});
-
 function S3Bucket(name, options) {
     Resource.apply(this, arguments);
 
