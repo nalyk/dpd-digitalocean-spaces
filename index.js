@@ -177,11 +177,6 @@ S3Bucket.prototype.post = function (ctx, next) {
 
         console.log('files')
         console.log(files['files[]'])
-        
-        var debugInfo = {
-            fields: fields,
-            files: files['files[]']
-        }
 
         var params = {
             Bucket: this.config.bucket,
