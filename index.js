@@ -117,11 +117,11 @@ S3Bucket.prototype.post = function (ctx, next) {
     form.parse(req, function (err, fields, files) {
         console.log('Form parse...')
 
-        console.log('fields')
-        console.log(fields)
+        //console.log('fields')
+        //console.log(fields)
 
-        console.log('files')
-        console.log(files['files[]'])
+        //console.log('files')
+        //console.log(files['files[]'])
         
         var debugInfo = {
             fields: fields,
@@ -129,8 +129,10 @@ S3Bucket.prototype.post = function (ctx, next) {
         }
         resultFiles.push(files['files[]']);
     });
+    req.resume();
+
     console.log(resultFiles);
-    return req.resume();
+    return ctx.done(null, resultFiles);
 }
 
 // get a signedUrl for get object into s3
