@@ -1,11 +1,12 @@
 var Resource = require('deployd/lib/resource')
 , httpUtil = require('deployd/lib/util/http')
 , util = require('util')
-, AWS = require('aws-sdk');
+, AWS = require('aws-sdk')
+, fs = require('fs');
 
 function S3Bucket(name, options) {
     Resource.apply(this, arguments);
-    if (this.config.key && this.config.secret && this.config.endpoint) {
+    if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
         this.s3 = new AWS.S3({
             forcePathStyle: false, // Configures to use subdomain/virtual calling format.
             endpoint:  this.config.endpoint,
@@ -23,13 +24,16 @@ S3Bucket.label = "S3 Space";
 
 S3Bucket.prototype.clientGeneration = true;
 
-S3Bucket.events = ["put", "get", "delete"];
+S3Bucket.events = ["post", "put", "get", "delete"];
 S3Bucket.basicDashboard = {
     settings: [{
         name: 'key'
         , type: 'string'
     }, {
         name: 'secret'
+        , type: 'string'
+    }, {
+        name: 'bucket'
         , type: 'string'
     }, {
         name: 'endpoint'
@@ -73,10 +77,42 @@ S3Bucket.prototype.handle = function (ctx, next) {
         } else {
             this.delete(ctx, next);
         }
+    } else if (req.method === "POST") {
+        if (this.events['post']) {
+            this.events['post'].run(ctx, domain, function(err) {
+                if (err) return ctx.done(err);
+                bucket.post(ctx, next);
+            });
+        } else {
+            this.post(ctx, next);
+        }
     } else {
         next();
     }
 };
+
+// Upload a file to S3
+S3Bucket.prototype.post = function (ctx, next) {
+    var s3Key = ctx.url[0] == '/' ? ctx.url.substr(1) : ctx.url;
+
+
+    const file = fs.readFileSync("/opt/pulsapi/public/logo33_blue.png");
+
+
+    var params = {
+        Bucket: this.config.bucket,
+        Key: s3Key,
+        Body: file,
+        ACL: "public"
+    };
+    
+    this.s3.putObjet(params, (err, data) => {
+        if (err) return console.log(err);
+        console.log("Your file has been uploaded successfully!", data);
+        ctx.done(null, data);
+    });
+    
+}
 
 // get a signedUrl for get object into s3
 S3Bucket.prototype.get = function (ctx, next) {
