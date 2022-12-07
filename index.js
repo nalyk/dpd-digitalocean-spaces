@@ -176,11 +176,11 @@ S3Bucket.prototype.post = function (ctx, next) {
         console.log(fields)
 
         console.log('files')
-        console.log(files)
+        console.log(files['files[]'])
         
         var debugInfo = {
             fields: fields,
-            files: files
+            files: files['files[]']
         }
 
         return ctx.done(null, debugInfo);
