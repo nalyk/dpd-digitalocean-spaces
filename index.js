@@ -113,26 +113,24 @@ S3Bucket.prototype.post = function (ctx, next) {
         remainingFile = 0;
 
     form.uploadDir = uploadDir;
+
+    var processDone = function(err, fields, files) {
+        if (err) return ctx.done(err);
+
+        console.log('fields')
+        console.log(fields)
+
+        console.log('files')
+        console.log(files['files[]'])
+
+        return ctx.done({ statusCode: 200, message: "var processDone - END cb" });
+    };
     
-    form.parse(req, function (err, fields, files) {
-        console.log('Form parse...')
-
-        //console.log('fields')
-        //console.log(fields)
-
-        //console.log('files')
-        //console.log(files['files[]'])
-        
-        var debugInfo = {
-            fields: fields,
-            files: files['files[]']
-        }
-        resultFiles.push(files['files[]']);
-    });
+    form.parse(req, processDone);
     req.resume();
 
-    console.log(resultFiles);
-    return ctx.done(null, resultFiles);
+    // console.log(resultFiles);
+    return ctx.done({ statusCode: 200, message: "S3Bucket.prototype.post - END cb" });
 }
 
 // get a signedUrl for get object into s3
