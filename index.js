@@ -15,7 +15,7 @@ var thisConfig,
 function S3Bucket(name, options) {
     Resource.apply(this, arguments);
     if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
-        thisConfig = this.config;
+        
         this.s3 = new AWS.S3({
             forcePathStyle: true, // Configures to use subdomain/virtual calling format.
             endpoint: this.config.endpoint,
@@ -27,7 +27,8 @@ function S3Bucket(name, options) {
                 secretAccessKey: this.config.secret,
             }
         });
-
+        /* dirty formidable hack */
+        thisConfig = this.config;
         thisS3 = this.s3;
     }
 }
@@ -96,29 +97,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         //console.log(fileInfo);
         var uploadedFiles = [];
         var uploadInfo = {};
-        var allUploadParams = [];
 
-        for (let i = 0; i < fileInfo.files.length; i++) {
-            var params = {
-                Bucket: thisConfig.bucket,
-                Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(localFile.originalFilename) + path.extname(localFile.originalFilename),
-                Body: fs.createReadStream(localFile.filepath),
-                ACL: "public-read"
-            };
-            allUploadParams.push(params);
-        }
-
-        var options = {
-            partSize: 10 * 1024 * 1024, // 10 MB
-            queueSize: 10
-        };
-
-        const responses = await Promise.all(
-            params.map(param => thisS3.upload(param, options).promise())
-        );
-
-        return ctx.done(null, responses);
-        /*
         for (let i = 0; i < fileInfo.files.length; i++) {
             console.log('s3UploadProcessed() - for loop index: '+i);
             var localFile = fileInfo.files[i];
@@ -151,7 +130,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                         uploadedFiles.push(data);
                         //next();
                         //ctx.done;
-                        return ctx.done();
+                        return ctx.done(null, "ok");
                     }
                 } else {
                     console.log('uplod module error');
@@ -160,7 +139,6 @@ S3Bucket.prototype.post = function (ctx, next) {
                 }
             });
         }
-        */
     }
     
     form.parse(req)
