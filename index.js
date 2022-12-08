@@ -110,6 +110,8 @@ S3Bucket.prototype.post = function (ctx, next) {
         
         if (remainingFile === 0) {
             console.log('formProcessDone() - remainingFile === 0');
+            console.log('formFileInfo');
+            console.log(formFileInfo);
             return ctx.done(null, resultFiles); // TODO not clear what to do here yet
         }
     }
@@ -188,7 +190,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         //return ctx.done(err);
         formFileInfo.files = formFiles;
         formFileInfo.fields = formFields;
-        return formProcessDone(formFileInfo);
+        return formProcessDone(err);
     })/*.on('end', function() {
         formFileInfo.files = formFiles;
         formFileInfo.fields = formFields;
