@@ -94,45 +94,6 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
-    var twicPicsProcess = function(formFileInfo) {
-        console.log('twicPicsProcess() - hit');
-        
-        var files = formFileInfo.files;
-        console.log(files);
-
-        var allImagesArray = [];
-
-        for (let i = 0; i < files.length; i++) {
-            var originalSrcKey = files[0].key;
-            var originalTwicImg = 'https://pulsmedia.twic.pics/s3/'+originalSrcKey;
-            /*
-            article featured - ?twic=v1/focus=auto/cover=750x422
-            article featured medium - ?twic=v1/focus=auto/cover=428x241
-            article featured small - ?twic=v1/focus=auto/cover=300x169
-            square big - ?twic=v1/focus=auto/cover=750x750
-            square small - ?twic=v1/focus=auto/cover=300x300
-            article vertical - ?twic=v1/focus=auto/cover=422x563
-            thumbnail - ?twic=v1/focus=auto/cover=100x100
-            inarticle big - ?twic=v1/focus=auto/resize=750
-            inarticle small - ?twic=v1/focus=auto/resize=428
-            */
-            var rendintions = [
-                originalTwicImg+"?twic=v1/focus=auto/cover=750x422",
-                originalTwicImg+"?twic=v1/focus=auto/cover=428x241",
-                originalTwicImg+"?twic=v1/focus=auto/cover=300x169",
-                originalTwicImg+"?twic=v1/focus=auto/cover=750x750",
-                originalTwicImg+"?twic=v1/focus=auto/cover=300x300",
-                originalTwicImg+"?twic=v1/focus=auto/cover=422x563",
-                originalTwicImg+"?twic=v1/focus=auto/cover=100x100",
-                originalTwicImg+"?twic=v1/focus=auto/resize=750",
-                originalTwicImg+"?twic=v1/focus=auto/resize=428",
-            ]
-            formFileInfo.files[i].rendintions = rendintions;
-        }
-
-        return ctx.done(null, formFileInfo);
-    }
-
     var formProcessDone = function(err, fileInfo, fields) {
         console.log('formProcessDone() - hit');
         if (err) return ctx.done(err);
@@ -150,7 +111,8 @@ S3Bucket.prototype.post = function (ctx, next) {
             });
             formFileInfo.files = resultFiles;
             
-            return twicPicsProcess(formFileInfo);
+            return ctx.done(null, formFileInfo);
+            // return twicPicsProcess(formFileInfo);
         }
     }
 
