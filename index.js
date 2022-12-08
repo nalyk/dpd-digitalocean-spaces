@@ -92,7 +92,8 @@ S3Bucket.prototype.post = function (ctx, next) {
     form.uploadDir = uploadDir;
 
     var s3UploadProcessed = function(fileInfo) {
-        console.log('function s3UploadProcessed');
+        console.log('s3UploadProcessed() - HIT!');
+        //console.log('function s3UploadProcessed');
         //console.log(fileInfo);
         var uploadedFiles = [];
         var uploadInfo = {};
@@ -100,6 +101,9 @@ S3Bucket.prototype.post = function (ctx, next) {
         var uploadCounter = 0;
 
         var checkUploadedCount = function(data) {
+            console.log('checkUploadedCount() - HIT!');
+            console.log('checkUploadedCount() - uploadCounter='+uploadCounter);
+            
             if (uploadCounter < fileInfo.files.length) {
                 setReturnInfo(data);
             } else {
@@ -110,6 +114,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         }
 
         var setReturnInfo = function(data) {
+            console.log('setReturnInfo() - HIT!');
             uploadedFiles.push(data);
         }
 
@@ -133,6 +138,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                     //console.log('uplod module success');
                     //console.log(data); // successful response
                     //return ctx.done(null, data);
+                    console.log('thisS3.upload() - HIT!');
                     checkUploadedCount(data);
                     //uploadedFiles.push(data);
                 } else {
