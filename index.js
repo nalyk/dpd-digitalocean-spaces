@@ -94,6 +94,15 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
+    var twicPicsProcess = function(formFileInfo) {
+        console.log('twicPicsProcess() - hit');
+        
+        var files = formFileInfo.files;
+        console.log(files);
+
+        return ctx.done(null, formFileInfo);
+    }
+
     var formProcessDone = function(err, fileInfo, fields) {
         console.log('formProcessDone() - hit');
         if (err) return ctx.done(err);
@@ -107,11 +116,11 @@ S3Bucket.prototype.post = function (ctx, next) {
             formFileInfo.fields = fields;
 
             resultFiles.forEach(object => {
-                object.cdn = object.Location.replace("pulsmedia.fra1.digitaloceanspaces.com", "pulsmedia.fra1.cdn.digitaloceanspaces.com");
+                object.cdn = object.Location.replace("digitaloceanspaces.com", "cdn.digitaloceanspaces.com");
             });
             formFileInfo.files = resultFiles;
             
-            return ctx.done(null, formFileInfo); // TODO not clear what to do here yet
+            return twicPicsProcess(formFileInfo);
         }
     }
 
