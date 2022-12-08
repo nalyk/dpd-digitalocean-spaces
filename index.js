@@ -127,7 +127,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                     } else {
                         console.log('s3UploadProcessed()['+i+'] - thisS3.upload() i < fileInfo.files.length');
                         uploadedFiles.push(data);
-                        req.resume();
+                        next();
                         //ctx.done;
                     }
                 } else {
