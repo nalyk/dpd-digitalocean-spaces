@@ -125,8 +125,10 @@ S3Bucket.prototype.post = function (ctx, next) {
             queueSize: 10
         };
     
-        thisS3.upload(params, options, function (err, data) {
+        thisS3.upload(params,/* options, */function (err, data) {
             if (!err) {
+                console.log('s3UploadFile() - thisS3.upload() - data');
+                console.log(data);
                 formProcessDone(null, data, fields);
             } else {
                 console.log('upload module error');
