@@ -154,7 +154,7 @@ S3Bucket.prototype.post = function (ctx, next) {
     }).on('end', function() {
         formFileInfo.files = formFiles;
         formFileInfo.fields = formFields;
-        return s3UploadProcessed(formFileInfo);
+        s3UploadProcessed(formFileInfo);
     });
 
     req.resume();
