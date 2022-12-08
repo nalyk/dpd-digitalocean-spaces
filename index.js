@@ -9,8 +9,6 @@ var Resource    = require('deployd/lib/resource')
 , md5			= require('md5')
 , mime		    = require('mime');
 
-const download = require('images-downloader').images;
-
 var thisConfig,
     thisS3;
 function S3Bucket(name, options) {
