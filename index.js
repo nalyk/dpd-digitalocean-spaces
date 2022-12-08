@@ -126,7 +126,8 @@ S3Bucket.prototype.post = function (ctx, next) {
                         return ctx.done(null, uploadInfo);
                     } else {
                         console.log('s3UploadProcessed()['+i+'] - thisS3.upload() i < fileInfo.files.length');
-                        return uploadedFiles.push(data);
+                        //return uploadedFiles.push(data);
+                        ctx.done
                     }
                 } else {
                     console.log('uplod module error');
