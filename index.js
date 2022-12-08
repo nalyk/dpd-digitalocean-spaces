@@ -110,6 +110,34 @@ S3Bucket.prototype.post = function (ctx, next) {
                 object.cdn = object.Location.replace("digitaloceanspaces.com", "cdn.digitaloceanspaces.com");
             });
             formFileInfo.files = resultFiles;
+
+            for (let i = 0; i < formFileInfo.files.length; i++) {
+                var originalSrcKey = formFileInfo.files[i].key;
+                var originalTwicImg = 'https://pulsmedia.twic.pics/s3/'+originalSrcKey;
+                /*
+                article featured - ?twic=v1/focus=auto/cover=750x422
+                article featured medium - ?twic=v1/focus=auto/cover=428x241
+                article featured small - ?twic=v1/focus=auto/cover=300x169
+                square big - ?twic=v1/focus=auto/cover=750x750
+                square small - ?twic=v1/focus=auto/cover=300x300
+                article vertical - ?twic=v1/focus=auto/cover=422x563
+                thumbnail - ?twic=v1/focus=auto/cover=100x100
+                inarticle big - ?twic=v1/focus=auto/resize=750
+                inarticle small - ?twic=v1/focus=auto/resize=428
+                */
+                var rendintions = [
+                    originalTwicImg+"?twic=v1/focus=auto/cover=750x422",
+                    originalTwicImg+"?twic=v1/focus=auto/cover=428x241",
+                    originalTwicImg+"?twic=v1/focus=auto/cover=300x169",
+                    originalTwicImg+"?twic=v1/focus=auto/cover=750x750",
+                    originalTwicImg+"?twic=v1/focus=auto/cover=300x300",
+                    originalTwicImg+"?twic=v1/focus=auto/cover=422x563",
+                    originalTwicImg+"?twic=v1/focus=auto/cover=100x100",
+                    originalTwicImg+"?twic=v1/focus=auto/resize=750",
+                    originalTwicImg+"?twic=v1/focus=auto/resize=428",
+                ]
+                formFileInfo.files[i].twics = rendintions;
+            }
             
             return ctx.done(null, formFileInfo);
             // return twicPicsProcess(formFileInfo);
