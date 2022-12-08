@@ -91,34 +91,35 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
+    var uploadedFiles = [];
+    var uploadInfo = {};
+
+    var uploadCounter = 0;
+
+    var checkUploadedCount = function(data) {
+        console.log('checkUploadedCount() - HIT!');
+        console.log('checkUploadedCount() - uploadCounter='+uploadCounter);
+        console.log('checkUploadedCount() - fileInfo.files.length='+fileInfo.files.length);
+        
+        if (uploadCounter < fileInfo.files.length) {
+            setReturnInfo(data);
+        } else {
+            uploadInfo.fields = fileInfo.fields;
+            uploadInfo.files = uploadedFiles;
+            return ctx.done(null, uploadInfo);
+        }
+    }
+
+    var setReturnInfo = function(data) {
+        console.log('setReturnInfo() - HIT!');
+        uploadCounter++;
+        uploadedFiles.push(data);
+    }
+
     var s3UploadProcessed = function(fileInfo) {
         console.log('s3UploadProcessed() - HIT!');
         //console.log('function s3UploadProcessed');
         //console.log(fileInfo);
-        var uploadedFiles = [];
-        var uploadInfo = {};
-
-        var uploadCounter = 0;
-
-        var checkUploadedCount = function(data) {
-            console.log('checkUploadedCount() - HIT!');
-            console.log('checkUploadedCount() - uploadCounter='+uploadCounter);
-            console.log('checkUploadedCount() - fileInfo.files.length='+fileInfo.files.length);
-            
-            if (uploadCounter < fileInfo.files.length) {
-                setReturnInfo(data);
-            } else {
-                uploadInfo.fields = fileInfo.fields;
-                uploadInfo.files = uploadedFiles;
-                return ctx.done(null, uploadInfo);
-            }
-        }
-
-        var setReturnInfo = function(data) {
-            console.log('setReturnInfo() - HIT!');
-            uploadCounter++;
-            uploadedFiles.push(data);
-        }
 
         for (let i = 0; i < fileInfo.files.length; i++) {
             var localFile = fileInfo.files[i];
