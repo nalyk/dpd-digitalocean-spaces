@@ -92,12 +92,13 @@ S3Bucket.prototype.post = function (ctx, next) {
     form.uploadDir = uploadDir;
 
     var s3UploadProcessed = function(fileInfo) {
-        console.log('function s3UploadProcessed');
+        console.log('s3UploadProcessed() - HIT!');
         //console.log(fileInfo);
         var uploadedFiles = [];
         var uploadInfo = {};
 
         for (let i = 0; i < fileInfo.files.length; i++) {
+            console.log('s3UploadProcessed() - for loop index:'+i);
             var localFile = fileInfo.files[i];
 
             var params = {
@@ -114,14 +115,17 @@ S3Bucket.prototype.post = function (ctx, next) {
         
             thisS3.upload(params, options, function (err, data) {
                 if (!err) {
+                    console.log('s3UploadProcessed()['+i+'] - thisS3.upload() when fileInfo.files.length='+fileInfo.files.length);
                     //console.log('uplod module success');
                     //console.log(data); // successful response
                     //return ctx.done(null, data);
                     if (i == fileInfo.files.length) {
+                        console.log('s3UploadProcessed()['+i+'] - thisS3.upload() i = fileInfo.files.length');
                         uploadInfo.fields = fileInfo.fields;
                         uploadInfo.files = uploadedFiles;
                         return ctx.done(null, uploadInfo);
                     } else {
+                        console.log('s3UploadProcessed()['+i+'] - thisS3.upload() i < fileInfo.files.length');
                         uploadedFiles.push(data);
                     }
                 } else {
