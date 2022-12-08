@@ -114,6 +114,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         console.log('setReturnInfo() - HIT!');
         uploadCounter++;
         uploadedFiles.push(data);
+        return;
     }
 
     var s3UploadProcessed = function(fileInfo) {
