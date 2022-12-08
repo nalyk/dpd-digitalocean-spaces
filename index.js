@@ -113,20 +113,6 @@ S3Bucket.prototype.post = function (ctx, next) {
     var s3UploadFile = function(file, fields) {
         console.log('s3UploadFile() - hit');
 
-        return ctx.done(null, file);
-        /*
-        var signParams = {
-            Bucket: thisConfig.bucket,
-            Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(file.originalFilename) + path.extname(file.originalFilename),
-            "ContentType": "application/octet-stream"
-        };
-        */
-        
-        /*
-        s3.getSignedUrl('putObject', params, function (err, url) {
-            console.log('The URL is', url);
-        */
-        /*
         var params = {
             Bucket: thisConfig.bucket,
             Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(file.originalFilename) + path.extname(file.originalFilename),
@@ -150,7 +136,6 @@ S3Bucket.prototype.post = function (ctx, next) {
                 return ctx.done("Upload S3 error!");
             }
         });
-        */
     }
 
     form.parse(req)
