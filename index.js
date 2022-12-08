@@ -7,7 +7,8 @@ var Resource    = require('deployd/lib/resource')
 , debug		    = require('debug')('dpd-fileupload')
 , formidable	= require('formidable')
 , md5			= require('md5')
-, mime		    = require('mime');
+, mime		    = require('mime')
+, httpsClient   = require('https');
 
 var thisConfig,
     thisS3;
