@@ -98,20 +98,12 @@ S3Bucket.prototype.post = function (ctx, next) {
         console.log('formProcessDone() - hit');
         if (err) return ctx.done(err);
         
-        //console.log('formProcessDone() - fileInfo');
-        //console.log(fileInfo);
-        
         resultFiles.push(fileInfo);
-        
-        //console.log('formProcessDone() - resultFiles');
-        //console.log(resultFiles);
         
         remainingFile--;
         
         if (remainingFile === 0) {
             console.log('formProcessDone() - remainingFile === 0');
-            console.log('formFileInfo');
-            console.log(formFileInfo);
             formFileInfo.fields = fields;
             formFileInfo.files = resultFiles;
             return ctx.done(null, formFileInfo); // TODO not clear what to do here yet
@@ -137,85 +129,25 @@ S3Bucket.prototype.post = function (ctx, next) {
             if (!err) {
                 formProcessDone(null, data, fields);
             } else {
-                console.log('uplod module error');
-                console.log(err); // an error occurred
+                console.log('upload module error');
+                console.log(err);
                 return ctx.done("Upload S3 error!");
             }
         });
     }
- 
-    /*
-    var s3UploadProcessed = function(fileInfo) {
-        console.log('s3UploadProcessed() - HIT!');
-        //console.log(fileInfo);
-        var uploadedFiles = [];
-        var uploadInfo = {};
 
-        for (let i = 0; i < fileInfo.files.length; i++) {
-            console.log('s3UploadProcessed() - for loop index: '+i);
-            var localFile = fileInfo.files[i];
-
-            var params = {
-                Bucket: thisConfig.bucket,
-                Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(localFile.originalFilename) + path.extname(localFile.originalFilename),
-                Body: fs.createReadStream(localFile.filepath),
-                ACL: "public-read"
-            };
-        
-            var options = {
-                partSize: 10 * 1024 * 1024, // 10 MB
-                queueSize: 10
-            };
-        
-            thisS3.upload(params, options, function (err, data) {
-                if (!err) {
-                    console.log('s3UploadProcessed()['+i+'] - thisS3.upload() when fileInfo.files.length='+fileInfo.files.length);
-                    //console.log('uplod module success');
-                    //console.log(data); // successful response
-                    //return ctx.done(null, data);
-                    if (i == fileInfo.files.length) {
-                        console.log('s3UploadProcessed()['+i+'] - thisS3.upload() i = fileInfo.files.length');
-                        uploadInfo.fields = fileInfo.fields;
-                        uploadInfo.files = uploadedFiles;
-                        return ctx.done(null, uploadInfo);
-                    } else {
-                        console.log('s3UploadProcessed()['+i+'] - thisS3.upload() i < fileInfo.files.length');
-                        uploadedFiles.push(data);
-                        //next();
-                        //ctx.done;
-                        continue;
-                    }
-                } else {
-                    console.log('uplod module error');
-                    console.log(err); // an error occurred
-                    return ctx.done("Upload S3 error!");
-                }
-            });
-        }
-    }
-    */
-    
     form.parse(req)
     .on('field', function(fieldName, fieldValue) {
-        // console.log('field', { key: fieldName, fieldValue: fieldValue });
         var fieldObject = {};
         fieldObject[fieldName] = fieldValue;
         formFields.push(fieldObject);
     }).on('file', function(name, file) {
-        //console.log('file', { name: name, file: file });
-        //formFiles.push(file);
         s3UploadFile(file, formFields);
     }).on('fileBegin', function(name, file) {
         remainingFile++;
     }).on('error', function(err) {
-        //return ctx.done(err);
         return formProcessDone(err, null, null);
-    })/*.on('end', function() {
-        formFileInfo.files = formFiles;
-        formFileInfo.fields = formFields;
-        return formProcessDone(formFileInfo);
-        // s3UploadProcessed(formFileInfo);
-    })*/;
+    });
 
     return req.resume();
 }
