@@ -103,6 +103,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         var checkUploadedCount = function(data) {
             console.log('checkUploadedCount() - HIT!');
             console.log('checkUploadedCount() - uploadCounter='+uploadCounter);
+            console.log('checkUploadedCount() - fileInfo.files.length='+fileInfo.files.length);
             
             if (uploadCounter < fileInfo.files.length) {
                 setReturnInfo(data);
@@ -111,6 +112,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                 uploadInfo.files = uploadedFiles;
                 return ctx.done(null, uploadInfo);
             }
+            uploadCounter++;
         }
 
         var setReturnInfo = function(data) {
@@ -139,7 +141,6 @@ S3Bucket.prototype.post = function (ctx, next) {
                     //console.log(data); // successful response
                     //return ctx.done(null, data);
                     console.log('thisS3.upload() - HIT!');
-                    uploadCounter++;
                     checkUploadedCount(data);
                     //uploadedFiles.push(data);
                 } else {
