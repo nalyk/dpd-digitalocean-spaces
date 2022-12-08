@@ -8,7 +8,7 @@ var Resource    = require('deployd/lib/resource')
 , formidable	= require('formidable')
 , md5			= require('md5')
 , mime		    = require('mime')
-, imgDownload   = require('images-downloader').images;
+, imgDownload   = require('images-downloader');
 
 
 var thisConfig,
