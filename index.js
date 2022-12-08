@@ -127,9 +127,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                 originalTwicImg+"?twic=v1/focus=auto/resize=750",
                 originalTwicImg+"?twic=v1/focus=auto/resize=428",
             ]
-
-            console.log('twicPicsProcess() - rendintions');
-            console.log(rendintions);
+            formFileInfo.files[i].rendintions = rendintions;
         }
 
         return ctx.done(null, formFileInfo);
