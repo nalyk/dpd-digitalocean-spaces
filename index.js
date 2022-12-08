@@ -10,8 +10,6 @@ var Resource    = require('deployd/lib/resource')
 , mime		    = require('mime')
 , httpsClient   = require('https');
 
-const Bull = require('bull');
-
 var thisConfig,
     thisS3;
 function S3Bucket(name, options) {
@@ -113,6 +111,8 @@ S3Bucket.prototype.post = function (ctx, next) {
             });
             formFileInfo.files = resultFiles;
 
+            const Bull = require('bull');
+
             for (let i = 0; i < formFileInfo.files.length; i++) {
                 var originalSrcKey = formFileInfo.files[i].key;
                 var originalTwicImg = 'https://pulsmedia.twic.pics/s3/'+originalSrcKey;
@@ -139,6 +139,8 @@ S3Bucket.prototype.post = function (ctx, next) {
                     originalTwicImg+"?twic=v1/focus=auto/resize=428",
                 ]
                 formFileInfo.files[i].twics = rendintions;
+
+                
 
                 var postImage = {
                     title: formFileInfo.fields.title,
