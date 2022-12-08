@@ -129,7 +129,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                         uploadedFiles.push(data);
                         //next();
                         //ctx.done;
-                        return ctx.done();
+                        return next();
                     }
                 } else {
                     console.log('uplod module error');
