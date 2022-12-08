@@ -94,7 +94,7 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
-    var formProcessDone = function(err, fileInfo) {
+    var formProcessDone = function(err, fileInfo, fields) {
         console.log('formProcessDone() - hit');
         if (err) return ctx.done(err);
         
@@ -112,15 +112,17 @@ S3Bucket.prototype.post = function (ctx, next) {
             console.log('formProcessDone() - remainingFile === 0');
             console.log('formFileInfo');
             console.log(formFileInfo);
-            return ctx.done(null, resultFiles); // TODO not clear what to do here yet
+            formFileInfo.fields = fields;
+            formFileInfo.files = resultFiles;
+            return ctx.done(null, formFileInfo); // TODO not clear what to do here yet
         }
     }
 
-    var s3UploadFile = function(file) {
+    var s3UploadFile = function(file, fields) {
         console.log('s3UploadFile() - hit');
         //console.log('s3UploadFile() - file');
         //console.log(file);
-        formProcessDone(null,file);
+        formProcessDone(null,file, fields);
     }
  
     /*
@@ -183,14 +185,12 @@ S3Bucket.prototype.post = function (ctx, next) {
     }).on('file', function(name, file) {
         //console.log('file', { name: name, file: file });
         //formFiles.push(file);
-        s3UploadFile(file);
+        s3UploadFile(file, formFields);
     }).on('fileBegin', function(name, file) {
         remainingFile++;
     }).on('error', function(err) {
         //return ctx.done(err);
-        formFileInfo.files = formFiles;
-        formFileInfo.fields = formFields;
-        return formProcessDone(err);
+        return formProcessDone(err, null, null);
     })/*.on('end', function() {
         formFileInfo.files = formFiles;
         formFileInfo.fields = formFields;
