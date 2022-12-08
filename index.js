@@ -84,7 +84,9 @@ S3Bucket.prototype.post = function (ctx, next) {
     ctx.body = {};
     
     var form = new formidable.IncomingForm(),
-        uploadDir = '/tmp';
+        uploadDir = '/tmp',
+        resultFiles = [],
+		remainingFile = 0;
 
     var formFileInfo = {};
     var formFields = [];
@@ -92,13 +94,31 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
+    var formProcessDone = function(fileInfo) {
+        console.log('formProcessDone() - hit');
+        if (err) return ctx.done(err);
+        
+        resultFiles.push(fileInfo);
+        
+        remainingFile--;
+        
+        if (remainingFile === 0) {
+            return ctx.done(null, resultFiles); // TODO not clear what to do here yet
+        }
+    }
+
+    var s3UploadFile = function(file) {
+        console.log('s3UploadFile() - hit');
+    }
+ 
+
     var s3UploadProcessed = function(fileInfo) {
         console.log('s3UploadProcessed() - HIT!');
         //console.log(fileInfo);
         var uploadedFiles = [];
         var uploadInfo = {};
 
-        forFiles: for (let i = 0; i < fileInfo.files.length; i++) {
+        for (let i = 0; i < fileInfo.files.length; i++) {
             console.log('s3UploadProcessed() - for loop index: '+i);
             var localFile = fileInfo.files[i];
 
@@ -130,7 +150,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                         uploadedFiles.push(data);
                         //next();
                         //ctx.done;
-                        continue forFiles;
+                        continue;
                     }
                 } else {
                     console.log('uplod module error');
@@ -149,14 +169,21 @@ S3Bucket.prototype.post = function (ctx, next) {
         formFields.push(fieldObject);
     }).on('file', function(name, file) {
         //console.log('file', { name: name, file: file });
-        formFiles.push(file);
+        //formFiles.push(file);
+        s3UploadFile(file);
+    }).on('fileBegin', function(name, file) {
+        remainingFile++;
     }).on('error', function(err) {
-        return ctx.done(err);
-    }).on('end', function() {
+        //return ctx.done(err);
         formFileInfo.files = formFiles;
         formFileInfo.fields = formFields;
-        s3UploadProcessed(formFileInfo);
-    });
+        return formProcessDone(formFileInfo);
+    })/*.on('end', function() {
+        formFileInfo.files = formFiles;
+        formFileInfo.fields = formFields;
+        return formProcessDone(formFileInfo);
+        // s3UploadProcessed(formFileInfo);
+    })*/;
 
-    req.resume();
+    return req.resume();
 }
