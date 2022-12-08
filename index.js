@@ -9,10 +9,13 @@ var Resource    = require('deployd/lib/resource')
 , md5			= require('md5')
 , mime		    = require('mime');
 
+
+var thisConfig,
+    thisS3;
 function S3Bucket(name, options) {
     Resource.apply(this, arguments);
     if (this.config.key && this.config.secret && this.config.bucket && this.config.endpoint) {
-
+        thisConfig = this.config;
         this.s3 = new AWS.S3({
             forcePathStyle: true, // Configures to use subdomain/virtual calling format.
             endpoint: this.config.endpoint,
@@ -24,6 +27,8 @@ function S3Bucket(name, options) {
                 secretAccessKey: this.config.secret,
             }
         });
+
+        thisS3 = this.s3;
     }
 }
 util.inherits(S3Bucket, Resource);
@@ -96,7 +101,7 @@ S3Bucket.prototype.post = function (ctx, next) {
             var localFile = fileInfo.files[i];
 
             var params = {
-                Bucket: this.config.bucket,
+                Bucket: thisConfig.bucket,
                 Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(file.originalFilename) + path.extname(file.originalFilename),
                 Body: fs.createReadStream(file.filepath),
                 ACL: "public-read"
@@ -107,7 +112,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                 queueSize: 10
             };
         
-            this.s3.upload(params, options, function (err, data) {
+            thisS3.upload(params, options, function (err, data) {
                 if (!err) {
                     //console.log('uplod module success');
                     //console.log(data); // successful response
