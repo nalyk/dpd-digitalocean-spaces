@@ -142,6 +142,17 @@ S3Bucket.prototype.post = function (ctx, next) {
                     originalTwicImg+"?twic=v1/focus=auto/resize=428",
                 ]
                 formFileInfo.files[i].twics = rendintions;
+
+                var postImage = {
+                    title: formFileInfo.fields.title,
+                    description: formFileInfo.fields.formFileInfo.fields.title,
+                    sourceSiteUrl: formFileInfo.fields.formFileInfo.fields.sourceSiteUrl,
+                    originalUrl: formFileInfo.files[i].cdn
+                }
+
+                thisDpdclient.images.post(postImage, function(result, error) {
+                   console.log(result);
+                });
             }
             
             return ctx.done(null, formFileInfo);
