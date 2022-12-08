@@ -98,17 +98,26 @@ S3Bucket.prototype.post = function (ctx, next) {
         console.log('formProcessDone() - hit');
         if (err) return ctx.done(err);
         
+        console.log('formProcessDone() - fileInfo');
+        console.log(fileInfo);
+        
         resultFiles.push(fileInfo);
+        
+        console.log('formProcessDone() - resultFiles');
+        console.log(resultFiles);
         
         remainingFile--;
         
         if (remainingFile === 0) {
+            console.log('formProcessDone() - remainingFile === 0');
             return ctx.done(null, resultFiles); // TODO not clear what to do here yet
         }
     }
 
     var s3UploadFile = function(file) {
         console.log('s3UploadFile() - hit');
+        console.log('s3UploadFile() - file');
+        console.log(file);
         formProcessDone();
     }
  
