@@ -105,7 +105,12 @@ S3Bucket.prototype.post = function (ctx, next) {
         if (remainingFile === 0) {
             console.log('formProcessDone() - remainingFile === 0');
             formFileInfo.fields = fields;
+
+            resultFiles.forEach(object => {
+                object.cdn = object.Location.replace("pulsmedia.fra1.digitaloceanspaces.com", "pulsmedia.fra1.cdn.digitaloceanspaces.com");
+            });
             formFileInfo.files = resultFiles;
+            
             return ctx.done(null, formFileInfo); // TODO not clear what to do here yet
         }
     }
@@ -117,6 +122,7 @@ S3Bucket.prototype.post = function (ctx, next) {
             Bucket: thisConfig.bucket,
             Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(file.originalFilename) + path.extname(file.originalFilename),
             Body: fs.createReadStream(file.filepath),
+            ContentType: file.mimetype,
             ACL: "public-read"
         };
     
