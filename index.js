@@ -10,6 +10,8 @@ var Resource    = require('deployd/lib/resource')
 , mime		    = require('mime')
 , httpsClient   = require('https');
 
+var internalClient = require('deployd/lib/internal-client');
+
 var thisConfig,
     thisS3;
 function S3Bucket(name, options) {
@@ -30,6 +32,9 @@ function S3Bucket(name, options) {
         /* dirty formidable hack */
         thisConfig = this.config;
         thisS3 = this.s3;
+
+        thisDpdclient = internalClient.build(process.server);
+        this.dpdclient = thisDpdclient;
     }
 }
 util.inherits(S3Bucket, Resource);
