@@ -102,8 +102,8 @@ S3Bucket.prototype.post = function (ctx, next) {
 
             var params = {
                 Bucket: thisConfig.bucket,
-                Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(file.originalFilename) + path.extname(file.originalFilename),
-                Body: fs.createReadStream(file.filepath),
+                Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(localFile.originalFilename) + path.extname(localFile.originalFilename),
+                Body: fs.createReadStream(localFile.filepath),
                 ACL: "public-read"
             };
         
