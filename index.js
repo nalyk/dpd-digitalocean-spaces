@@ -120,9 +120,28 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     var s3UploadFile = function(file, fields) {
         console.log('s3UploadFile() - hit');
-        //console.log('s3UploadFile() - file');
-        //console.log(file);
-        formProcessDone(null,file, fields);
+        
+        var params = {
+            Bucket: thisConfig.bucket,
+            Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(file.originalFilename) + path.extname(file.originalFilename),
+            Body: fs.createReadStream(file.filepath),
+            ACL: "public-read"
+        };
+    
+        var options = {
+            partSize: 10 * 1024 * 1024, // 10 MB
+            queueSize: 10
+        };
+    
+        thisS3.upload(params, options, function (err, data) {
+            if (!err) {
+                formProcessDone(null, data, fields);
+            } else {
+                console.log('uplod module error');
+                console.log(err); // an error occurred
+                return ctx.done("Upload S3 error!");
+            }
+        });
     }
  
     /*
