@@ -81,6 +81,8 @@ S3Bucket.prototype.post = function (ctx, next) {
         uploadDir = '/tmp';
 
     var formFileInfo = {};
+    var formFields = [];
+    var formFiles = [];
 
     form.uploadDir = uploadDir;
 
@@ -93,11 +95,15 @@ S3Bucket.prototype.post = function (ctx, next) {
     form.parse(req)
     .on('field', function(fieldName, fieldValue) {
         console.log('field', { key: fieldName, fieldValue: fieldValue });
+        formFields.push(fieldValue);
     }).on('file', function(name, file) {
         console.log('file', { name: name, file: file });
+        formFiles.push(file);
     }).on('error', function(err) {
         return ctx.done(err);
     }).on('end', function() {
+        formFileInfo.files = formFiles;
+        formFileInfo.fields = formFields;
         return s3UploadProcessed(formFileInfo);
     });
 
