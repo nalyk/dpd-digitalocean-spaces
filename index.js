@@ -113,6 +113,11 @@ S3Bucket.prototype.post = function (ctx, next) {
 
             const Bull = require('bull');
 
+            const connectQueue = (name) => new Bull(name, {
+                redis: { port: '6379', host: '127.0.0.1' }
+            });
+              
+
             for (let i = 0; i < formFileInfo.files.length; i++) {
                 var originalSrcKey = formFileInfo.files[i].key;
                 var originalTwicImg = 'https://pulsmedia.twic.pics/s3/'+originalSrcKey;
