@@ -111,7 +111,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         console.log('s3UploadFile() - hit');
     }
  
-
+    /*
     var s3UploadProcessed = function(fileInfo) {
         console.log('s3UploadProcessed() - HIT!');
         //console.log(fileInfo);
@@ -160,6 +160,7 @@ S3Bucket.prototype.post = function (ctx, next) {
             });
         }
     }
+    */
     
     form.parse(req)
     .on('field', function(fieldName, fieldValue) {
