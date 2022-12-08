@@ -91,36 +91,11 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
-    var uploadedFiles = [];
-    var uploadInfo = {};
-
-    var uploadCounter = 0;
-
-    var checkUploadedCount = function(data, length, fields) {
-        console.log('checkUploadedCount() - HIT!');
-        console.log('checkUploadedCount() - uploadCounter='+uploadCounter);
-        console.log('checkUploadedCount() - fileInfo.files.length='+length);
-        
-        if (uploadCounter < length) {
-            setReturnInfo(data);
-        } else {
-            uploadInfo.fields = fields;
-            uploadInfo.files = uploadedFiles;
-            return ctx.done(null, uploadInfo);
-        }
-    }
-
-    var setReturnInfo = function(data) {
-        console.log('setReturnInfo() - HIT!');
-        uploadCounter++;
-        uploadedFiles.push(data);
-        return;
-    }
-
     var s3UploadProcessed = function(fileInfo) {
-        console.log('s3UploadProcessed() - HIT!');
-        //console.log('function s3UploadProcessed');
+        console.log('function s3UploadProcessed');
         //console.log(fileInfo);
+        var uploadedFiles = [];
+        var uploadInfo = {};
 
         for (let i = 0; i < fileInfo.files.length; i++) {
             var localFile = fileInfo.files[i];
@@ -142,18 +117,20 @@ S3Bucket.prototype.post = function (ctx, next) {
                     //console.log('uplod module success');
                     //console.log(data); // successful response
                     //return ctx.done(null, data);
-                    console.log('thisS3.upload() - HIT!');
-                    checkUploadedCount(data, fileInfo.files.length, fileInfo.fields);
-                    //uploadedFiles.push(data);
+                    if (i == fileInfo.files.length) {
+                        uploadInfo.fields = fileInfo.fields;
+                        uploadInfo.files = uploadedFiles;
+                        return ctx.done(null, uploadInfo);
+                    } else {
+                        uploadedFiles.push(data);
+                    }
                 } else {
                     console.log('uplod module error');
                     console.log(err); // an error occurred
                     return ctx.done("Upload S3 error!");
                 }
             });
-        }        
-        
-        //return ctx.done(null, uploadInfo);
+        }
     }
     
     form.parse(req)
