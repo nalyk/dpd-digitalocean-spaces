@@ -111,7 +111,6 @@ S3Bucket.prototype.post = function (ctx, next) {
                 uploadInfo.files = uploadedFiles;
                 return ctx.done(null, uploadInfo);
             }
-            uploadCounter++;
         }
 
         var setReturnInfo = function(data) {
@@ -140,6 +139,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                     //console.log(data); // successful response
                     //return ctx.done(null, data);
                     console.log('thisS3.upload() - HIT!');
+                    uploadCounter++;
                     checkUploadedCount(data);
                     //uploadedFiles.push(data);
                 } else {
