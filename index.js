@@ -94,10 +94,12 @@ S3Bucket.prototype.post = function (ctx, next) {
     
     form.parse(req)
     .on('field', function(fieldName, fieldValue) {
-        console.log('field', { key: fieldName, fieldValue: fieldValue });
-        formFields.push(fieldValue);
+        // console.log('field', { key: fieldName, fieldValue: fieldValue });
+        var fieldObject = {};
+        fieldObject[fieldName] = fieldValue;
+        formFields.push(fieldObject);
     }).on('file', function(name, file) {
-        console.log('file', { name: name, file: file });
+        //console.log('file', { name: name, file: file });
         formFiles.push(file);
     }).on('error', function(err) {
         return ctx.done(err);
