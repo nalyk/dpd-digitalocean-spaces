@@ -106,12 +106,12 @@ S3Bucket.prototype.post = function (ctx, next) {
             
             if (uploadCounter < fileInfo.files.length) {
                 setReturnInfo(data);
-                uploadCounter++;
             } else {
                 uploadInfo.fields = fileInfo.fields;
                 uploadInfo.files = uploadedFiles;
                 return ctx.done(null, uploadInfo);
             }
+            uploadCounter++;
         }
 
         var setReturnInfo = function(data) {
