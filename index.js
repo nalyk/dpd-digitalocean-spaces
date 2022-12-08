@@ -98,7 +98,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         var uploadedFiles = [];
         var uploadInfo = {};
 
-        for (let i = 0; i < fileInfo.files.length; i++) {
+        forFiles: for (let i = 0; i < fileInfo.files.length; i++) {
             console.log('s3UploadProcessed() - for loop index: '+i);
             var localFile = fileInfo.files[i];
 
@@ -130,7 +130,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                         uploadedFiles.push(data);
                         //next();
                         //ctx.done;
-                        continue;
+                        continue forFiles;
                     }
                 } else {
                     console.log('uplod module error');
