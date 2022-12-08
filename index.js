@@ -96,7 +96,29 @@ S3Bucket.prototype.post = function (ctx, next) {
         //console.log(fileInfo);
         var uploadedFiles = [];
         var uploadInfo = {};
+        var allUploadParams = [];
 
+        for (let i = 0; i < fileInfo.files.length; i++) {
+            var params = {
+                Bucket: thisConfig.bucket,
+                Key: 'images/' + (new Date()).toISOString().split('T')[0] + '/' + md5(localFile.originalFilename) + path.extname(localFile.originalFilename),
+                Body: fs.createReadStream(localFile.filepath),
+                ACL: "public-read"
+            };
+            allUploadParams.push(params);
+        }
+
+        var options = {
+            partSize: 10 * 1024 * 1024, // 10 MB
+            queueSize: 10
+        };
+
+        const responses = await Promise.all(
+            params.map(param => thisS3.upload(param, options).promise())
+        );
+
+        return ctx.done(null, responses);
+        /*
         for (let i = 0; i < fileInfo.files.length; i++) {
             console.log('s3UploadProcessed() - for loop index: '+i);
             var localFile = fileInfo.files[i];
@@ -129,7 +151,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                         uploadedFiles.push(data);
                         //next();
                         //ctx.done;
-                        return next();
+                        return ctx.done();
                     }
                 } else {
                     console.log('uplod module error');
@@ -138,6 +160,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                 }
             });
         }
+        */
     }
     
     form.parse(req)
