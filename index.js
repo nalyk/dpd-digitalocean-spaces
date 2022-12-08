@@ -10,6 +10,8 @@ var Resource    = require('deployd/lib/resource')
 , mime		    = require('mime')
 , httpsClient   = require('https');
 
+const Bull = require('bull');
+
 var thisConfig,
     thisS3;
 function S3Bucket(name, options) {
