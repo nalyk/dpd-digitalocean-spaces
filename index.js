@@ -98,13 +98,13 @@ S3Bucket.prototype.post = function (ctx, next) {
         console.log('formProcessDone() - hit');
         if (err) return ctx.done(err);
         
-        console.log('formProcessDone() - fileInfo');
-        console.log(fileInfo);
+        //console.log('formProcessDone() - fileInfo');
+        //console.log(fileInfo);
         
         resultFiles.push(fileInfo);
         
-        console.log('formProcessDone() - resultFiles');
-        console.log(resultFiles);
+        //console.log('formProcessDone() - resultFiles');
+        //console.log(resultFiles);
         
         remainingFile--;
         
