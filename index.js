@@ -97,6 +97,22 @@ S3Bucket.prototype.post = function (ctx, next) {
         var uploadedFiles = [];
         var uploadInfo = {};
 
+        var uploadCounter = 0;
+
+        var checkUploadedCount = function(data) {
+            if (uploadCounter < fileInfo.files.length) {
+                setReturnInfo(data);
+            } else {
+                uploadInfo.fields = fileInfo.fields;
+                uploadInfo.files = uploadedFiles;
+                return ctx.done(null, uploadInfo);
+            }
+        }
+
+        var setReturnInfo = function(data) {
+            uploadedFiles.push(data);
+        }
+
         for (let i = 0; i < fileInfo.files.length; i++) {
             var localFile = fileInfo.files[i];
 
@@ -117,18 +133,17 @@ S3Bucket.prototype.post = function (ctx, next) {
                     //console.log('uplod module success');
                     //console.log(data); // successful response
                     //return ctx.done(null, data);
-                    uploadedFiles.push(data);
+                    checkUploadedCount(data);
+                    //uploadedFiles.push(data);
                 } else {
                     console.log('uplod module error');
                     console.log(err); // an error occurred
                     return ctx.done("Upload S3 error!");
                 }
             });
-        }
-        uploadInfo.fields = fileInfo.fields;
-        uploadInfo.files = uploadedFiles;
+        }        
         
-        return ctx.done(null, uploadInfo);
+        //return ctx.done(null, uploadInfo);
     }
     
     form.parse(req)
