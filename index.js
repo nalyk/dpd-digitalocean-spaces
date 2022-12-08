@@ -109,7 +109,7 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     var s3UploadFile = function(file) {
         console.log('s3UploadFile() - hit');
-        processDone();
+        formProcessDone();
     }
  
     /*
