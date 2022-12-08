@@ -120,18 +120,17 @@ S3Bucket.prototype.post = function (ctx, next) {
             ACL: "public-read"
         };
     
-        var options = {
+        var options = {/*
             partSize: 10 * 1024 * 1024, // 10 MB
             queueSize: 10
-        };
+    */};
     
         thisS3.upload(params, options, function (err, data) {
             if (!err) {
                 formProcessDone(null, data, fields);
             } else {
-                console.log('upload module error');
-                console.log(err);
-                return ctx.done("Upload S3 error!");
+                //console.log('upload module error');
+                return ctx.done(err);
             }
         });
     }
