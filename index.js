@@ -96,15 +96,15 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     var uploadCounter = 0;
 
-    var checkUploadedCount = function(data) {
+    var checkUploadedCount = function(data, length, fields) {
         console.log('checkUploadedCount() - HIT!');
         console.log('checkUploadedCount() - uploadCounter='+uploadCounter);
-        console.log('checkUploadedCount() - fileInfo.files.length='+fileInfo.files.length);
+        console.log('checkUploadedCount() - fileInfo.files.length='+length);
         
-        if (uploadCounter < fileInfo.files.length) {
+        if (uploadCounter < length) {
             setReturnInfo(data);
         } else {
-            uploadInfo.fields = fileInfo.fields;
+            uploadInfo.fields = fields;
             uploadInfo.files = uploadedFiles;
             return ctx.done(null, uploadInfo);
         }
@@ -142,7 +142,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                     //console.log(data); // successful response
                     //return ctx.done(null, data);
                     console.log('thisS3.upload() - HIT!');
-                    checkUploadedCount(data);
+                    checkUploadedCount(data, fileInfo.files.length, fileInfo.fields);
                     //uploadedFiles.push(data);
                 } else {
                     console.log('uplod module error');
