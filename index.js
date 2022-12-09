@@ -176,7 +176,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         
         if (remainingFile === 0) {
             console.log('formProcessDone() - remainingFile === 0');
-            formFileInfo.fields = fields;
+            formFileInfo.fields = fields[0];
 
             resultFiles.forEach(object => {
                 object.cdn = object.Location.replace("digitaloceanspaces.com", "cdn.digitaloceanspaces.com");
