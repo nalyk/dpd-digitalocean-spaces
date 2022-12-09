@@ -264,12 +264,12 @@ S3Bucket.prototype.post = function (ctx, next) {
             });
             formFileInfo.files = resultFiles;  
             
-            //console.log("formFileInfo");
-            //console.log(formFileInfo);
+            console.log("formFileInfo");
+            console.log(formFileInfo);
 
             for (let i = 0; i < formFileInfo.files.length; i++) { 
 
-                var postImgDescription = formFileInfo.fields.find(({description}) => description).description ? formFileInfo.fields.find(({description}) => description).description : "";
+                var postImgDescription = "";
                 var postImageData = {
                     title: formFileInfo.fields.find(({title}) => title).title,
                     description: postImgDescription,
