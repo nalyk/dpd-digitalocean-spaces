@@ -139,10 +139,10 @@ S3Bucket.prototype.post = function (ctx, next) {
             post_res.on('end', function () {
                 callback(null, body, fileinfo) // call the call back with complete response
             });
-        });
 
-        post_res.on('error', function (e) {
-            callback(e) // call the callback with error
+            post_res.on('error', function (e) {
+                callback(e) // call the callback with error
+            });
         });
       
         // post the data
