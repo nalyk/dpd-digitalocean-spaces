@@ -57,7 +57,7 @@ S3Bucket.basicDashboard = {
         name: 'deploydInstance'
         , type: 'string'
         , description: 'URL of the Deployd instance'
-    }. {
+    }, {
         name: 'imgCollection'
         , type: 'string'
         , description: 'Name of the images collection'
