@@ -104,7 +104,7 @@ S3Bucket.prototype.post = function (ctx, next) {
     form.uploadDir = uploadDir;
 
     var postImageCallback = function(error, data, fileinfo) {
-        console.log('postImageCallback() - hit');
+        //console.log('postImageCallback() - hit');
         if (error) return ctx.done(err);
 
         const Bull = require('bull');
@@ -186,8 +186,8 @@ S3Bucket.prototype.post = function (ctx, next) {
             }
         ]
 
-        console.log('postImageCallback data');
-        console.log(JSON.parse(data));
+        //console.log('postImageCallback data');
+        //console.log(JSON.parse(data));
 
         for (let i = 0; i < rendintions.length; i++) {
             const jobData = {
@@ -203,7 +203,7 @@ S3Bucket.prototype.post = function (ctx, next) {
     }
 
     var postImage = function(data, fileinfo, callback) {
-        console.log('postImage() - hit');
+        //console.log('postImage() - hit');
         // Build the post string from an object
         //var post_data = querystring.stringify(data);
         var post_data = JSON.stringify(data);
@@ -248,7 +248,7 @@ S3Bucket.prototype.post = function (ctx, next) {
     }
 
     var formProcessDone = function(err, fileInfo, fields) {
-        console.log('formProcessDone() - hit');
+        //console.log('formProcessDone() - hit');
         if (err) return ctx.done(err);
         
         resultFiles.push(fileInfo);
@@ -256,7 +256,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         remainingFile--;
         
         if (remainingFile === 0) {
-            console.log('formProcessDone() - remainingFile === 0');
+            //console.log('formProcessDone() - remainingFile === 0');
             formFileInfo.fields = fields;
 
             resultFiles.forEach(object => {
@@ -264,8 +264,8 @@ S3Bucket.prototype.post = function (ctx, next) {
             });
             formFileInfo.files = resultFiles;  
             
-            console.log("formFileInfo");
-            console.log(formFileInfo);
+            //console.log("formFileInfo");
+            //console.log(formFileInfo);
 
             var postImgDescription = "";
             const searchDescIndex = formFileInfo.fields.findIndex((field) => typeof field.description !== 'undefined');
@@ -280,8 +280,8 @@ S3Bucket.prototype.post = function (ctx, next) {
                     originalUrl: formFileInfo.files[i].cdn
                 }
 
-                console.log("postImageData");
-                console.log(postImageData);
+                //console.log("postImageData");
+                //console.log(postImageData);
 
                 postImage(postImageData, formFileInfo, postImageCallback);
             }
@@ -292,7 +292,7 @@ S3Bucket.prototype.post = function (ctx, next) {
     }
 
     var s3UploadFile = function(file, fields) {
-        console.log('s3UploadFile() - hit');
+        //console.log('s3UploadFile() - hit');
 
         var params = {
             Bucket: thisConfig.bucket,
@@ -309,12 +309,12 @@ S3Bucket.prototype.post = function (ctx, next) {
     
         thisS3.upload(params, options, function (err, data) {
             if (!err) {
-                console.log('s3UploadFile() - thisS3.upload() - data');
-                console.log(data);
+                //console.log('s3UploadFile() - thisS3.upload() - data');
+                //console.log(data);
                 formProcessDone(null, data, fields);
             } else {
-                console.log('upload module error');
-                console.log(err);
+                //console.log('upload module error');
+                //console.log(err);
                 return ctx.done("Upload S3 error!");
             }
         });
