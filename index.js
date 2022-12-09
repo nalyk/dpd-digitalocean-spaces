@@ -116,7 +116,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         const jobOptions = {
             // jobId, uncoment this line if your want unique jobid
             removeOnComplete: true, // remove job if complete
-            // delay: 60000,
+            delay: 1000,
             attempts: 3 // attempt if job is error retry 3 times
         };
         
