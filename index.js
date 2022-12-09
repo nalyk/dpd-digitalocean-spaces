@@ -183,15 +183,15 @@ S3Bucket.prototype.post = function (ctx, next) {
             });
             formFileInfo.files = resultFiles;  
             
-            console.log("formFileInfo");
-            console.log(formFileInfo);
+            //console.log("formFileInfo");
+            //console.log(formFileInfo);
 
             for (let i = 0; i < formFileInfo.files.length; i++) { 
 
                 var postImageData = {
-                    title: formFileInfo.fields.title,
-                    description: formFileInfo.fields.title,
-                    sourceSiteUrl: formFileInfo.fields.sourceSiteUrl,
+                    title: formFileInfo.fields.find(({title}) => title),
+                    description: formFileInfo.fields.find(({description}) => description),
+                    sourceSiteUrl: formFileInfo.fields.find(({sourceSiteUrl}) => sourceSiteUrl),
                     originalUrl: formFileInfo.files[i].cdn
                 }
 
