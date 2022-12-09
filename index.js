@@ -53,6 +53,10 @@ S3Bucket.basicDashboard = {
     }, {
         name: 'endpoint'
         , type: 'string'
+    }, {
+        name: 'imgCollection'
+        , type: 'string'
+        , description: 'Name of the images collection'
     }]
 };
 
@@ -97,7 +101,8 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     var postImage = function(data) {
         // Build the post string from an object
-        var post_data = querystring.stringify(data);
+        //var post_data = querystring.stringify(data);
+        var post_data = JSON.stringify(data);
       
         // An object of options to indicate where to post to
         var post_options = {
@@ -184,8 +189,6 @@ S3Bucket.prototype.post = function (ctx, next) {
                     originalTwicImg+"?twic=v1/focus=auto/resize=428",
                 ]
                 formFileInfo.files[i].twics = rendintions;
-
-                
 
                 var postImageData = {
                     title: formFileInfo.fields.title,
