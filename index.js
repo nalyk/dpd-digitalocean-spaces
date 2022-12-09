@@ -267,9 +267,12 @@ S3Bucket.prototype.post = function (ctx, next) {
             console.log("formFileInfo");
             console.log(formFileInfo);
 
+            var postImgDescription = "";
+            const searchDescIndex = formFileInfo.fields.findIndex((field) => typeof field.description !== 'undefined');
+            postImgDescription = formFileInfo.fields[searchDescIndex].description;
+
             for (let i = 0; i < formFileInfo.files.length; i++) { 
 
-                var postImgDescription = "";
                 var postImageData = {
                     title: formFileInfo.fields.find(({title}) => title).title,
                     description: postImgDescription,
