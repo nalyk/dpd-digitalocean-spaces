@@ -192,8 +192,11 @@ S3Bucket.prototype.post = function (ctx, next) {
                     originalUrl: formFileInfo.files[i].cdn
                 }
 
+                console.log("formFileInfo");
+                console.log(formFileInfo);
+
                 console.log("postImageData");
-                console.log(postImageData)
+                console.log(postImageData);
 
                 postImage(postImageData, formFileInfo, postImageCallback);
             }
