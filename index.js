@@ -122,6 +122,79 @@ S3Bucket.prototype.post = function (ctx, next) {
         
         const nameQueue = 'pulsmedia-img-sizes';
 
+        var rendintions = [
+            {
+                name: "featured_big",
+                focus: auto
+                width: 750
+                height: 422,
+                operation: cover
+            },
+            {
+                name: "featured_medium",
+                focus: auto
+                width: 428
+                height: 241,
+                operation: cover
+            },
+            {
+                name: "featured_small",
+                focus: auto
+                width: 300
+                height: 169,
+                operation: cover
+            },
+            {
+                name: "square_big",
+                focus: auto
+                width: 750
+                height: 750,
+                operation: cover
+            },
+            {
+                name: "square_big",
+                focus: auto
+                width: 300
+                height: 300,
+                operation: cover
+            },
+            {
+                name: "vertical",
+                focus: auto
+                width: 422
+                height: 563,
+                operation: cover
+            },
+            {
+                name: "thumbnail",
+                focus: auto
+                width: 100
+                height: 100,
+                operation: cover
+            },
+            {
+                name: "inarticle_big",
+                focus: auto
+                width: 750
+                operation: resize
+            },
+            {
+                name: "inarticle_small",
+                focus: auto
+                width: 428
+                operation: resize
+            }
+        ]
+
+        for (let i = 0; i < rendintions.length; i++) {
+            const jobData = {
+                imageId: data.id,
+                rendintion: rendintions[i]
+            }
+
+            connectQueue(nameQueue).add(jobData, jobOptions);
+        }
+
         return ctx.done(null, data);
     }
 
