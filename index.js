@@ -125,64 +125,64 @@ S3Bucket.prototype.post = function (ctx, next) {
         var rendintions = [
             {
                 name: "featured_big",
-                focus: auto,
+                focus: "auto",
                 width: 750,
                 height: 422,
-                operation: cover
+                operation: "cover"
             },
             {
                 name: "featured_medium",
-                focus: auto,
+                focus: "auto",
                 width: 428,
                 height: 241,
-                operation: cover
+                operation: "cover"
             },
             {
                 name: "featured_small",
-                focus: auto,
+                focus: "auto",
                 width: 300,
                 height: 169,
-                operation: cover
+                operation: "cover"
             },
             {
                 name: "square_big",
-                focus: auto,
+                focus: "auto",
                 width: 750,
                 height: 750,
-                operation: cover
+                operation: "cover"
             },
             {
                 name: "square_big",
-                focus: auto,
+                focus: "auto",
                 width: 300,
                 height: 300,
-                operation: cover
+                operation: "cover"
             },
             {
                 name: "vertical",
-                focus: auto,
+                focus: "auto",
                 width: 422,
                 height: 563,
-                operation: cover
+                operation: "cover"
             },
             {
                 name: "thumbnail",
-                focus: auto,
+                focus: "auto",
                 width: 100,
                 height: 100,
-                operation: cover
+                operation: "cover"
             },
             {
                 name: "inarticle_big",
-                focus: auto,
+                focus: "auto",
                 width: 750,
-                operation: resize
+                operation: "resize"
             },
             {
                 name: "inarticle_small",
-                focus: auto,
+                focus: "auto",
                 width: 428,
-                operation: resize
+                operation: "resize"
             }
         ]
 
