@@ -191,9 +191,9 @@ S3Bucket.prototype.post = function (ctx, next) {
                 formFileInfo.files[i].twics = rendintions;
 
                 var postImageData = {
-                    title: formFileInfo.fields.title,
-                    description: formFileInfo.fields.title,
-                    sourceSiteUrl: formFileInfo.fields.sourceSiteUrl,
+                    title: formFileInfo.fields[0].title,
+                    description: formFileInfo.fields[0].title,
+                    sourceSiteUrl: formFileInfo.fields[0].sourceSiteUrl,
                     originalUrl: formFileInfo.files[i].cdn
                 }
 
