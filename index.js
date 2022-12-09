@@ -186,6 +186,9 @@ S3Bucket.prototype.post = function (ctx, next) {
             }
         ]
 
+        console.log('postImageCallback data');
+        console.log(data);
+
         for (let i = 0; i < rendintions.length; i++) {
             const jobData = {
                 imageId: data.id,
