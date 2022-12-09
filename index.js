@@ -9,7 +9,7 @@ var Resource    = require('deployd/lib/resource')
 , md5			= require('md5')
 , mime		    = require('mime')
 , httpsClient   = require('https')
-, fetchClient   = require('node-fetch');
+, querystring   = require('querystring');
 
 var thisConfig,
     thisS3;
