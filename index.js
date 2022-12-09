@@ -103,6 +103,21 @@ S3Bucket.prototype.post = function (ctx, next) {
         console.log('postImageCallback() - hit');
         if (error) return ctx.done(err);
 
+        const Bull = require('bull');
+
+        const connectQueue = (name) => new Bull(name, {
+            redis: { port: '6379', host: '127.0.0.1' }
+        });
+
+        const jobOptions = {
+            // jobId, uncoment this line if your want unique jobid
+            removeOnComplete: true, // remove job if complete
+            // delay: 60000,
+            attempts: 3 // attempt if job is error retry 3 times
+        };
+        
+        const nameQueue = 'pulsmedia-img-sizes';
+
         return ctx.done(null, data);
     }
 
@@ -166,50 +181,9 @@ S3Bucket.prototype.post = function (ctx, next) {
             resultFiles.forEach(object => {
                 object.cdn = object.Location.replace("digitaloceanspaces.com", "cdn.digitaloceanspaces.com");
             });
-            formFileInfo.files = resultFiles;
+            formFileInfo.files = resultFiles;             
 
-            const Bull = require('bull');
-
-            const connectQueue = (name) => new Bull(name, {
-                redis: { port: '6379', host: '127.0.0.1' }
-            });
-
-            const jobOptions = {
-                // jobId, uncoment this line if your want unique jobid
-                removeOnComplete: true, // remove job if complete
-                // delay: 60000,
-                attempts: 3 // attempt if job is error retry 3 times
-            };
-            
-            const nameQueue = 'pulsmedia-img-sizes';
-              
-
-            for (let i = 0; i < formFileInfo.files.length; i++) {
-                var originalSrcKey = formFileInfo.files[i].key;
-                var originalTwicImg = 'https://pulsmedia.twic.pics/s3/'+originalSrcKey;
-                /*
-                article featured - ?twic=v1/focus=auto/cover=750x422
-                article featured medium - ?twic=v1/focus=auto/cover=428x241
-                article featured small - ?twic=v1/focus=auto/cover=300x169
-                square big - ?twic=v1/focus=auto/cover=750x750
-                square small - ?twic=v1/focus=auto/cover=300x300
-                article vertical - ?twic=v1/focus=auto/cover=422x563
-                thumbnail - ?twic=v1/focus=auto/cover=100x100
-                inarticle big - ?twic=v1/focus=auto/resize=750
-                inarticle small - ?twic=v1/focus=auto/resize=428
-                */
-                var rendintions = [
-                    originalTwicImg+"?twic=v1/focus=auto/cover=750x422",
-                    originalTwicImg+"?twic=v1/focus=auto/cover=428x241",
-                    originalTwicImg+"?twic=v1/focus=auto/cover=300x169",
-                    originalTwicImg+"?twic=v1/focus=auto/cover=750x750",
-                    originalTwicImg+"?twic=v1/focus=auto/cover=300x300",
-                    originalTwicImg+"?twic=v1/focus=auto/cover=422x563",
-                    originalTwicImg+"?twic=v1/focus=auto/cover=100x100",
-                    originalTwicImg+"?twic=v1/focus=auto/resize=750",
-                    originalTwicImg+"?twic=v1/focus=auto/resize=428",
-                ]
-                formFileInfo.files[i].twics = rendintions;
+            for (let i = 0; i < formFileInfo.files.length; i++) { 
 
                 var postImageData = {
                     title: formFileInfo.fields[0].title,
