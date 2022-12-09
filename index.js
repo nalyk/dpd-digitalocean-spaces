@@ -112,7 +112,7 @@ S3Bucket.prototype.post = function (ctx, next) {
         };
       
         // Set up the request
-        var post_req = http.request(post_options, function(post_res) {
+        var post_req = httpsClient.request(post_options, function(post_res) {
             post_res.setEncoding('utf8');
             post_res.on('data', function (chunk) {
                 console.log('Response: ' + chunk);
