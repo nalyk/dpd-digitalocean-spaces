@@ -189,9 +189,9 @@ S3Bucket.prototype.post = function (ctx, next) {
             for (let i = 0; i < formFileInfo.files.length; i++) { 
 
                 var postImageData = {
-                    title: formFileInfo.fields.find(({title}) => title),
-                    description: formFileInfo.fields.find(({description}) => description),
-                    sourceSiteUrl: formFileInfo.fields.find(({sourceSiteUrl}) => sourceSiteUrl),
+                    title: formFileInfo.fields.find(({title}) => title).title,
+                    description: formFileInfo.fields.find(({description}) => description).description,
+                    sourceSiteUrl: formFileInfo.fields.find(({sourceSiteUrl}) => sourceSiteUrl).sourceSiteUrl,
                     originalUrl: formFileInfo.files[i].cdn
                 }
 
