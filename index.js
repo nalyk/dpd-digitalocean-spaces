@@ -8,7 +8,7 @@ var Resource    = require('deployd/lib/resource')
 , formidable	= require('formidable')
 , md5			= require('md5')
 , mime		    = require('mime')
-, httpsClient   = require('https')
+, httpsClient   = require('http')
 , querystring   = require('querystring');
 
 var thisConfig,
