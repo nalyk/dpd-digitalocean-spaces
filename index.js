@@ -111,7 +111,7 @@ S3Bucket.prototype.post = function (ctx, next) {
             path: '/',
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(post_data)
             }
         };
@@ -196,6 +196,9 @@ S3Bucket.prototype.post = function (ctx, next) {
                     sourceSiteUrl: formFileInfo.fields.sourceSiteUrl,
                     originalUrl: formFileInfo.files[i].cdn
                 }
+
+                console.log("postImageData");
+                console.log(postImageData)
 
                 postImage(postImageData);
             }
