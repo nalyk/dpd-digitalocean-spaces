@@ -95,6 +95,36 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
+    var postImage = function(data) {
+        // Build the post string from an object
+        var post_data = querystring.stringify(data);
+      
+        // An object of options to indicate where to post to
+        var post_options = {
+            host: 'eo5xkwkqbtz2im9.m.pipedream.net',
+            port: '443',
+            path: '/',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': Buffer.byteLength(post_data)
+            }
+        };
+      
+        // Set up the request
+        var post_req = http.request(post_options, function(post_res) {
+            post_res.setEncoding('utf8');
+            post_res.on('data', function (chunk) {
+                console.log('Response: ' + chunk);
+            });
+        });
+      
+        // post the data
+        post_req.write(post_data);
+        post_req.end();
+      
+    }
+
     var formProcessDone = function(err, fileInfo, fields) {
         console.log('formProcessDone() - hit');
         if (err) return ctx.done(err);
@@ -157,12 +187,14 @@ S3Bucket.prototype.post = function (ctx, next) {
 
                 
 
-                var postImage = {
+                var postImageData = {
                     title: formFileInfo.fields.title,
                     description: formFileInfo.fields.title,
                     sourceSiteUrl: formFileInfo.fields.sourceSiteUrl,
                     originalUrl: formFileInfo.files[i].cdn
                 }
+
+                postImage(postImageData);
             }
             
             return ctx.done(null, formFileInfo);
