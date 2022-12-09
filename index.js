@@ -152,7 +152,7 @@ S3Bucket.prototype.post = function (ctx, next) {
                 operation: "cover"
             },
             {
-                name: "square_big",
+                name: "square_small",
                 focus: "auto",
                 width: 300,
                 height: 300,
