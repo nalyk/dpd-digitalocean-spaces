@@ -176,12 +176,15 @@ S3Bucket.prototype.post = function (ctx, next) {
         
         if (remainingFile === 0) {
             console.log('formProcessDone() - remainingFile === 0');
-            formFileInfo.fields = fields[0];
+            formFileInfo.fields = fields;
 
             resultFiles.forEach(object => {
                 object.cdn = object.Location.replace("digitaloceanspaces.com", "cdn.digitaloceanspaces.com");
             });
-            formFileInfo.files = resultFiles;             
+            formFileInfo.files = resultFiles;  
+            
+            console.log("formFileInfo");
+            console.log(formFileInfo);
 
             for (let i = 0; i < formFileInfo.files.length; i++) { 
 
@@ -191,9 +194,6 @@ S3Bucket.prototype.post = function (ctx, next) {
                     sourceSiteUrl: formFileInfo.fields.sourceSiteUrl,
                     originalUrl: formFileInfo.files[i].cdn
                 }
-
-                console.log("formFileInfo");
-                console.log(formFileInfo);
 
                 console.log("postImageData");
                 console.log(postImageData);
