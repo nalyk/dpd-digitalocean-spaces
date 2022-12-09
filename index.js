@@ -187,11 +187,11 @@ S3Bucket.prototype.post = function (ctx, next) {
         ]
 
         console.log('postImageCallback data');
-        console.log(data);
+        console.log(JSON.parse(data));
 
         for (let i = 0; i < rendintions.length; i++) {
             const jobData = {
-                imageId: data.id,
+                imageId: JSON.parse(data).id,
                 rendintion: rendintions[i]
             }
 
