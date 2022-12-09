@@ -8,7 +8,8 @@ var Resource    = require('deployd/lib/resource')
 , formidable	= require('formidable')
 , md5			= require('md5')
 , mime		    = require('mime')
-, httpsClient   = require('https');
+, httpsClient   = require('https')
+, fetchClient   = require('node-fetch');
 
 var thisConfig,
     thisS3;
@@ -116,6 +117,15 @@ S3Bucket.prototype.post = function (ctx, next) {
             const connectQueue = (name) => new Bull(name, {
                 redis: { port: '6379', host: '127.0.0.1' }
             });
+
+            const jobOptions = {
+                // jobId, uncoment this line if your want unique jobid
+                removeOnComplete: true, // remove job if complete
+                // delay: 60000,
+                attempts: 3 // attempt if job is error retry 3 times
+            };
+            
+            const nameQueue = 'pulsmedia-img-sizes';
               
 
             for (let i = 0; i < formFileInfo.files.length; i++) {
