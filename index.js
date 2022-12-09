@@ -133,9 +133,9 @@ S3Bucket.prototype.post = function (ctx, next) {
       
         // An object of options to indicate where to post to
         var post_options = {
-            host: 'eo5xkwkqbtz2im9.m.pipedream.net',
-            port: '443',
-            path: '/',
+            host: '165.227.143.113',
+            port: '2403',
+            path: '/images',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
