@@ -192,13 +192,14 @@ S3Bucket.prototype.post = function (ctx, next) {
         for (let i = 0; i < rendintions.length; i++) {
             const jobData = {
                 imageId: JSON.parse(data).id,
+                originalUrl: JSON.parse(data).originalUrl,
                 rendintion: rendintions[i]
             }
 
             connectQueue(nameQueue).add(jobData, jobOptions);
         }
 
-        return ctx.done(null, data);
+        return ctx.done(null, JSON.parse(data));
     }
 
     var postImage = function(data, fileinfo, callback) {
