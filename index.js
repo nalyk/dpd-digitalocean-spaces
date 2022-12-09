@@ -99,7 +99,15 @@ S3Bucket.prototype.post = function (ctx, next) {
 
     form.uploadDir = uploadDir;
 
-    var postImage = function(data) {
+    var postImageCallback = function(error, data, fileinfo) {
+        console.log('postImageCallback() - hit');
+        if (error) return ctx.done(err);
+
+        return ctx.done(null, data);
+    }
+
+    var postImage = function(data, fileinfo, callback) {
+        console.log('postImage() - hit');
         // Build the post string from an object
         //var post_data = querystring.stringify(data);
         var post_data = JSON.stringify(data);
@@ -119,9 +127,22 @@ S3Bucket.prototype.post = function (ctx, next) {
         // Set up the request
         var post_req = httpsClient.request(post_options, function(post_res) {
             post_res.setEncoding('utf8');
+            /*
             post_res.on('data', function (chunk) {
                 console.log('Response: ' + chunk);
             });
+            */
+            var body = ""
+            post_res.on('data', function (chunk) {
+                body += chunk // accumlate each chunk
+            });
+            post_res.on('end', function () {
+                callback(null, body, fileinfo) // call the call back with complete response
+            });
+        });
+
+        post_res.on('error', function (e) {
+            callback(e) // call the callback with error
         });
       
         // post the data
@@ -200,10 +221,10 @@ S3Bucket.prototype.post = function (ctx, next) {
                 console.log("postImageData");
                 console.log(postImageData)
 
-                postImage(postImageData);
+                postImage(postImageData, formFileInfo, postImageCallback);
             }
             
-            return ctx.done(null, formFileInfo);
+            // 
             // return twicPicsProcess(formFileInfo);
         }
     }
